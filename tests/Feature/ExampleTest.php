@@ -29,11 +29,27 @@ class ExampleTest extends TestCase
         config([
             'esquinablock.adsense.enabled' => true,
             'esquinablock.adsense.slots.after_tool' => '1111111111',
+            'esquinablock.adsense.slots.before_faq' => null,
         ]);
 
         $this->get('/')
             ->assertSee('adsbygoogle.js?client=ca-pub-1852556021136727', false)
             ->assertSee('data-ad-slot="1111111111"', false)
-            ->assertDontSee('data-ad-slot=""', false);
+            ->assertDontSee('data-ad-slot=""', false)
+            ->assertDontSee('min-[1536px]:block', false);
+    }
+
+    public function test_anuncios_laterales_con_bloques_configurados(): void
+    {
+        config([
+            'esquinablock.adsense.enabled' => true,
+            'esquinablock.adsense.slots.side_left' => '2222222222',
+            'esquinablock.adsense.slots.side_right' => null,
+        ]);
+
+        $this->get('/')
+            ->assertSee('min-[1536px]:block', false)
+            ->assertSee('{"left":"2222222222"}', false)
+            ->assertDontSee('"right"', false);
     }
 }

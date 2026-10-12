@@ -130,16 +130,23 @@ Si el servidor tiene Node.js:
 npm ci && npm run build
 ```
 
-Si no lo tiene, ejecuta `npm run build` en local y sube la carpeta `public/build/` al servidor.
+Si no lo tiene (es el caso del VPS actual), compila en local y sube la carpeta `public/build/`:
+
+```bash
+npm run build
+rsync -az --delete public/build/ root@2.24.217.27:/var/www/esquina-block/public/build/
+```
 
 ### 4. Permisos y cachés
 
 ```bash
 sudo chown -R www-data:www-data storage bootstrap/cache
-php artisan config:cache
-php artisan route:cache
-php artisan view:cache
+sudo -u www-data php artisan config:cache
+sudo -u www-data php artisan view:cache
+sudo -u www-data php artisan event:cache
 ```
+
+> **No uses `php artisan route:cache` ni `php artisan optimize`.** Con la app en un subdirectorio, la caché de rutas de Laravel recorta la barra final de `/esquinablock/` y la página principal responde *405 Method Not Allowed*. Con una sola ruta, esa caché no aporta nada.
 
 ### 5. Apache
 
@@ -153,7 +160,14 @@ Alias /esquinablock /var/www/esquina-block/public
     AllowOverride All
     Require all granted
 </Directory>
+
+# Los archivos de build llevan hash en el nombre: se pueden cachear un año.
+<Directory /var/www/esquina-block/public/build>
+    Header set Cache-Control "public, max-age=31536000, immutable"
+</Directory>
 ```
+
+Hace falta `mod_headers` (`sudo a2enmod headers`).
 
 Activa `mod_rewrite` si no lo está y recarga Apache:
 
@@ -162,32 +176,45 @@ sudo a2enmod rewrite
 sudo apachectl configtest && sudo systemctl reload apache2
 ```
 
-Si alguna ruta interna devuelve 404, añade esta línea en `public/.htaccess`, justo después de `RewriteEngine On`:
-
-```apache
-RewriteBase /esquinablock/
-```
+Con Apache 2.4.58 no hace falta `RewriteBase` en `public/.htaccess`: las rutas internas (por ejemplo `/esquinablock/up`) funcionan con el `.htaccess` por defecto de Laravel.
 
 ### Actualizar a una nueva versión
+
+En local, tras hacer `git push`:
+
+```bash
+npm run build
+rsync -az --delete public/build/ root@2.24.217.27:/var/www/esquina-block/public/build/
+```
+
+En el servidor:
 
 ```bash
 cd /var/www/esquina-block
 git pull
-composer install --no-dev --optimize-autoloader
-npm ci && npm run build
-php artisan optimize:clear && php artisan config:cache && php artisan route:cache && php artisan view:cache
+COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --optimize-autoloader
+sudo -u www-data php artisan optimize:clear
+sudo -u www-data php artisan config:cache
+sudo -u www-data php artisan view:cache
+sudo -u www-data php artisan event:cache
 ```
 
 ## AdSense
 
 El script de AdSense (`ca-pub-1852556021136727`) se carga **solo con `APP_ENV=production`**, para no generar tráfico inválido en desarrollo. Con eso funcionan los anuncios automáticos configurados para esquinaweb.com en el panel de AdSense. El `ads.txt` ya está en la raíz del dominio (lo sirve WordPress).
 
-Opcionalmente hay dos bloques manuales, uno bajo la herramienta y otro antes de las preguntas frecuentes. Solo aparecen si se configura su ID de bloque en el `.env`:
+Además hay bloques manuales que solo aparecen si se configura su ID de bloque en el `.env`:
 
-```dotenv
-ADSENSE_SLOT_AFTER_TOOL=1234567890
-ADSENSE_SLOT_BEFORE_FAQ=1234567890
-```
+| Variable | Ubicación | Valor en producción |
+|---|---|---|
+| `ADSENSE_SLOT_AFTER_TOOL` | Bajo la herramienta | `1409541666` |
+| `ADSENSE_SLOT_BEFORE_FAQ` | Antes de las preguntas frecuentes | `5157214983` |
+| `ADSENSE_SLOT_SIDE_LEFT` | Lateral izquierdo fijo | `7223965968` |
+| `ADSENSE_SLOT_SIDE_RIGHT` | Lateral derecho fijo | `3401190893` |
+
+Los laterales son verticales (160 × 600, o 300 × 600 desde 1800 px de ancho) y solo se crean en pantallas de al menos 1536 × 760 px, donde caben en el hueco a los lados del contenido sin taparlo.
+
+Los formatos de superposición (pantalla completa, laterales y anclado) vienen de los anuncios automáticos. En el panel de AdSense, la zona superior de `/esquinablock` está excluida para que no aparezca un banner encima del título.
 
 Para desactivar AdSense en producción: `ADSENSE_ENABLED=false`. Tras cambiar el `.env`, ejecutar `php artisan config:cache`.
 

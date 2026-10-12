@@ -30,6 +30,8 @@ return [
         'slots' => [
             'after_tool' => env('ADSENSE_SLOT_AFTER_TOOL'),
             'before_faq' => env('ADSENSE_SLOT_BEFORE_FAQ'),
+            'side_left' => env('ADSENSE_SLOT_SIDE_LEFT'),
+            'side_right' => env('ADSENSE_SLOT_SIDE_RIGHT'),
         ],
     ],
 

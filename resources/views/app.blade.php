@@ -210,5 +210,7 @@
                 <a href="{{ $seo['cookies_url'] }}" class="hover:text-blue-700 hover:underline">Política de cookies</a>
             </p>
         </footer>
+
+        @include('partials.side-ads')
     </body>
 </html>
