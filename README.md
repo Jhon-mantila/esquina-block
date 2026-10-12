@@ -1,59 +1,192 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Esquina Block
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Herramienta web gratuita para **dividir una imagen en varias hojas A4 o Carta e imprimir un póster gigante** (estilo *block poster* / *rasterbator*). El usuario sube una imagen, elige filas y columnas, ve la previsualización y descarga un PDF listo para imprimir.
 
-## About Laravel
+- **Producción:** https://esquinaweb.com/esquinablock
+- **Proyecto de:** [EsquinaWeb](https://esquinaweb.com)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Características
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Subida por arrastrar y soltar o con clic (JPG, PNG y WebP, máximo 20 MB).
+- Imagen de ejemplo precargada, que se puede quitar y volver a mostrar.
+- Cuadrícula de 1 a 10 columnas y de 1 a 10 filas, papel A4 o Carta, orientación vertical u horizontal y márgenes ninguno, pequeño (5 mm) o mediano (10 mm).
+- Solapamiento opcional entre hojas (5 o 10 mm) y marcas de corte, para pegar las hojas sin huecos.
+- Previsualización en `<canvas>` con líneas de corte, franjas de solapamiento, numeración de hojas y hojas en blanco.
+- Tamaño final del póster en cm, calidad de impresión estimada en DPI y sugerencia de filas para no desperdiciar papel.
+- PDF con una hoja por página, número de hoja y barra de progreso, sin marca de agua. El archivo se llama `block-poster-AAAA-MM-DD.pdf`.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Privacidad
 
-## Learning Laravel
+**Todo el procesamiento ocurre en el navegador** (Canvas API y jsPDF). La imagen nunca se sube al servidor: no hay base de datos, ni login, ni almacenamiento de archivos. Laravel solo sirve la página.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Stack
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+| Capa | Tecnología |
+|---|---|
+| Backend | Laravel 12 (PHP 8.2+) |
+| Puente | Inertia.js 3 + Ziggy 2 |
+| Frontend | Vue 3 (JavaScript) + Tailwind CSS 4 |
+| Build | Vite 7 |
+| PDF | jsPDF 4 (se carga solo al pulsar «Descargar PDF») |
 
-## Laravel Sponsors
+## Estructura
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```
+app/Http/Controllers/EsquinaBlockController.php   Único controlador: devuelve la vista Inertia
+routes/web.php                                    Única ruta: "/" (nombre: esquinablock)
+resources/views/app.blade.php                     HTML base (título, meta, SEO)
+resources/js/
+├── app.js                                        Arranque de Vue + Inertia + Ziggy
+├── demoImage.js                                  Genera la imagen de ejemplo con Canvas
+├── Pages/EsquinaBlock/Index.vue                  Página principal: une todos los bloques
+├── Components/
+│   ├── ImageUploader.vue                         Zona de subida
+│   ├── GridSettings.vue                          Formulario de configuración
+│   ├── SegmentedControl.vue                      Selector de botones (A4 | Carta…)
+│   ├── GridPreview.vue                           Previsualización en canvas
+│   └── PdfGenerator.vue                          Resumen, botón de descarga y progreso
+└── Composables/useBlockPoster.js                 Lógica: cálculo de la cuadrícula, corte con Canvas, PDF y validaciones
+```
 
-### Premium Partners
+Todas las medidas internas están en **milímetros**. `computeLayout()` no usa el DOM, así que se puede probar directamente con Node.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## Desarrollo local
 
-## Contributing
+### Requisitos
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- PHP 8.2+ con las extensiones `mbstring`, `xml`, `curl`, `zip` y `fileinfo`
+- Composer 2
+- Node.js 20+ y npm
 
-## Code of Conduct
+### Instalación
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+git clone https://github.com/Jhon-mantila/esquina-block.git
+cd esquina-block
+composer install
+cp .env.example .env
+php artisan key:generate
+npm install
+```
 
-## Security Vulnerabilities
+### Levantar el proyecto simulando el subdirectorio
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+En producción la app vive en `/esquinablock`, no en la raíz. Para reproducirlo en local se usa la carpeta `.dev-root/` (ignorada por git), que contiene un enlace a `public/` con ese nombre:
 
-## License
+```bash
+mkdir -p .dev-root && ln -sfn ../public .dev-root/esquinablock
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Luego, en dos terminales:
+
+```bash
+php -S 127.0.0.1:8000 -t .dev-root   # servidor PHP
+npm run dev                          # Vite con recarga en caliente
+```
+
+Abre http://localhost:8000/esquinablock/
+
+> Si prefieres no usar Vite en modo desarrollo, compila una vez con `npm run build` y deja solo el servidor PHP.
+
+### Pruebas
+
+```bash
+php artisan test
+```
+
+La prueba de humo comprueba que la página carga y devuelve el componente `EsquinaBlock/Index`.
+
+## Despliegue en el VPS (Apache + WordPress)
+
+La app vive **fuera** de `public_html`. Solo su carpeta `public/` se expone en `/esquinablock` mediante una directiva `Alias`, de modo que WordPress sigue funcionando igual en la raíz del dominio.
+
+### 1. Clonar e instalar
+
+```bash
+cd /var/www
+git clone https://github.com/Jhon-mantila/esquina-block.git
+cd esquina-block
+composer install --no-dev --optimize-autoloader
+cp .env.example .env
+php artisan key:generate
+```
+
+### 2. Configurar `.env` de producción
+
+```dotenv
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://esquinaweb.com/esquinablock
+LOG_LEVEL=error
+SESSION_PATH=/esquinablock
+SESSION_SECURE_COOKIE=true
+```
+
+El resto de valores de `.env.example` ya vienen preparados: sin base de datos, sesión y caché en archivos, y SSR de Inertia desactivado.
+
+### 3. Compilar el frontend
+
+Si el servidor tiene Node.js:
+
+```bash
+npm ci && npm run build
+```
+
+Si no lo tiene, ejecuta `npm run build` en local y sube la carpeta `public/build/` al servidor.
+
+### 4. Permisos y cachés
+
+```bash
+sudo chown -R www-data:www-data storage bootstrap/cache
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+```
+
+### 5. Apache
+
+Dentro del `<VirtualHost *:443>` de esquinaweb.com:
+
+```apache
+Alias /esquinablock /var/www/esquina-block/public
+
+<Directory /var/www/esquina-block/public>
+    Options -Indexes +FollowSymLinks
+    AllowOverride All
+    Require all granted
+</Directory>
+```
+
+Activa `mod_rewrite` si no lo está y recarga Apache:
+
+```bash
+sudo a2enmod rewrite
+sudo apachectl configtest && sudo systemctl reload apache2
+```
+
+Si alguna ruta interna devuelve 404, añade esta línea en `public/.htaccess`, justo después de `RewriteEngine On`:
+
+```apache
+RewriteBase /esquinablock/
+```
+
+### Actualizar a una nueva versión
+
+```bash
+cd /var/www/esquina-block
+git pull
+composer install --no-dev --optimize-autoloader
+npm ci && npm run build
+php artisan optimize:clear && php artisan config:cache && php artisan route:cache && php artisan view:cache
+```
+
+## Pendiente
+
+- [ ] Contenido SEO: meta description, schema.org `SoftwareApplication`, sección «Cómo funciona», guía para armar el póster y preguntas frecuentes.
+- [ ] Bloques de AdSense.
+- [ ] Enlace cruzado con el artículo [Block Posters: Convierte imágenes en carteles gigantes](https://esquinaweb.com/block-posters-convierte-imagenes-en-carteles-gigantes/).
+- [ ] Fase 2: efectos artísticos (semitono, esténcil…).
+
+## Licencia
+
+Código propiedad de EsquinaWeb. Todos los derechos reservados.
