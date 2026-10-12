@@ -211,6 +211,7 @@
             </p>
         </footer>
 
+        @include('partials.back-to-top')
         @include('partials.side-ads')
     </body>
 </html>

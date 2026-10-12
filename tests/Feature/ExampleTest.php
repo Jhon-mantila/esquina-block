@@ -11,6 +11,7 @@ class ExampleTest extends TestCase
     {
         $this->get('/')
             ->assertOk()
+            ->assertSee('aria-label="Volver arriba"', false)
             ->assertInertia(fn (Assert $page) => $page->component('EsquinaBlock/Index'));
     }
 
@@ -21,7 +22,9 @@ class ExampleTest extends TestCase
 
     public function test_adsense_no_se_carga_fuera_de_produccion(): void
     {
-        $this->get('/')->assertDontSee('adsbygoogle', false);
+        $this->get('/')
+            ->assertDontSee('pagead2.googlesyndication.com', false)
+            ->assertDontSee('data-ad-slot', false);
     }
 
     public function test_adsense_se_carga_con_bloques_configurados(): void

@@ -15,7 +15,8 @@
     --}}
     <script>
         (() => {
-            if (!matchMedia('(min-width: 1536px) and (min-height: 760px)').matches) return;
+            // Con menos de 800 px de alto, el lateral derecho chocaría con el botón «Volver arriba».
+            if (!matchMedia('(min-width: 1536px) and (min-height: 800px)').matches) return;
 
             const width = innerWidth >= 1800 ? 300 : 160;
             const slots = @json($sideSlots);

@@ -212,7 +212,7 @@ Además hay bloques manuales que solo aparecen si se configura su ID de bloque e
 | `ADSENSE_SLOT_SIDE_LEFT` | Lateral izquierdo fijo | `7223965968` |
 | `ADSENSE_SLOT_SIDE_RIGHT` | Lateral derecho fijo | `3401190893` |
 
-Los laterales son verticales (160 × 600, o 300 × 600 desde 1800 px de ancho) y solo se crean en pantallas de al menos 1536 × 760 px, donde caben en el hueco a los lados del contenido sin taparlo.
+Los laterales son verticales (160 × 600, o 300 × 600 desde 1800 px de ancho) y solo se crean en pantallas de al menos 1536 × 800 px, donde caben en el hueco a los lados del contenido sin taparlo.
 
 Los formatos de superposición (pantalla completa, laterales y anclado) vienen de los anuncios automáticos. En el panel de AdSense, la zona superior de `/esquinablock` está excluida para que no aparezca un banner encima del título.
 
