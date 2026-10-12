@@ -17,7 +17,7 @@ Herramienta web gratuita para **dividir una imagen en varias hojas A4 o Carta e 
 
 ### Privacidad
 
-**Todo el procesamiento ocurre en el navegador** (Canvas API y jsPDF). La imagen nunca se sube al servidor: no hay base de datos, ni login, ni almacenamiento de archivos. Laravel solo sirve la página.
+**Todo el procesamiento ocurre en el navegador** (Canvas API y jsPDF). La imagen nunca se sube al servidor: no hay base de datos, ni login, ni almacenamiento de archivos. Laravel solo sirve la página y no crea cookies: la sesión y la protección CSRF están desactivadas en `bootstrap/app.php` porque no hay formularios.
 
 ## Stack
 
@@ -118,11 +118,9 @@ APP_ENV=production
 APP_DEBUG=false
 APP_URL=https://esquinaweb.com/esquinablock
 LOG_LEVEL=error
-SESSION_PATH=/esquinablock
-SESSION_SECURE_COOKIE=true
 ```
 
-El resto de valores de `.env.example` ya vienen preparados: sin base de datos, sesión y caché en archivos, y SSR de Inertia desactivado.
+El resto de valores de `.env.example` ya vienen preparados: sin base de datos, caché en archivos y SSR de Inertia desactivado.
 
 ### 3. Compilar el frontend
 
