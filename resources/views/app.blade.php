@@ -71,6 +71,10 @@
 
         <script type="application/ld+json">{!! json_encode($schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) !!}</script>
 
+        @if (config('esquinablock.adsense.enabled'))
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ config('esquinablock.adsense.client') }}" crossorigin="anonymous"></script>
+        @endif
+
         @routes
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @inertiaHead
@@ -107,6 +111,8 @@
                     </p>
                 </noscript>
             </div>
+
+            @include('partials.ad', ['position' => 'after_tool', 'class' => 'mt-14'])
 
             <div class="mx-auto max-w-3xl space-y-14 px-4 py-14 sm:py-20">
                 <section id="como-funciona" aria-labelledby="como-funciona-titulo">
@@ -171,6 +177,8 @@
                     </div>
                 </section>
 
+                @include('partials.ad', ['position' => 'before_faq'])
+
                 <section id="preguntas-frecuentes" aria-labelledby="faq-titulo">
                     <h2 id="faq-titulo" class="text-2xl font-bold text-slate-900">Preguntas frecuentes</h2>
                     <div class="mt-6 divide-y divide-slate-200 rounded-2xl border border-slate-200 bg-white">
@@ -195,6 +203,11 @@
             </p>
             <p class="mt-2">
                 ¿Buscas otras opciones? Lee nuestra <a href="{{ $seo['review_url'] }}" class="text-blue-700 hover:underline">reseña de Block Posters</a>.
+            </p>
+            <p class="mt-2">
+                <a href="{{ $seo['privacy_url'] }}" class="hover:text-blue-700 hover:underline">Política de privacidad</a>
+                <span aria-hidden="true">·</span>
+                <a href="{{ $seo['cookies_url'] }}" class="hover:text-blue-700 hover:underline">Política de cookies</a>
             </p>
         </footer>
     </body>

@@ -178,11 +178,24 @@ npm ci && npm run build
 php artisan optimize:clear && php artisan config:cache && php artisan route:cache && php artisan view:cache
 ```
 
+## AdSense
+
+El script de AdSense (`ca-pub-1852556021136727`) se carga **solo con `APP_ENV=production`**, para no generar tráfico inválido en desarrollo. Con eso funcionan los anuncios automáticos configurados para esquinaweb.com en el panel de AdSense. El `ads.txt` ya está en la raíz del dominio (lo sirve WordPress).
+
+Opcionalmente hay dos bloques manuales, uno bajo la herramienta y otro antes de las preguntas frecuentes. Solo aparecen si se configura su ID de bloque en el `.env`:
+
+```dotenv
+ADSENSE_SLOT_AFTER_TOOL=1234567890
+ADSENSE_SLOT_BEFORE_FAQ=1234567890
+```
+
+Para desactivar AdSense en producción: `ADSENSE_ENABLED=false`. Tras cambiar el `.env`, ejecutar `php artisan config:cache`.
+
 ## Pendiente
 
-- [ ] Contenido SEO: meta description, schema.org `SoftwareApplication`, sección «Cómo funciona», guía para armar el póster y preguntas frecuentes.
-- [ ] Bloques de AdSense.
-- [ ] Enlace cruzado con el artículo [Block Posters: Convierte imágenes en carteles gigantes](https://esquinaweb.com/block-posters-convierte-imagenes-en-carteles-gigantes/).
+- [x] Contenido SEO: meta description, schema.org `WebApplication` y `FAQPage`, sección «Cómo funciona», guía para armar el póster y preguntas frecuentes.
+- [x] AdSense.
+- [ ] Enlace desde el artículo [Block Posters: Convierte imágenes en carteles gigantes](https://esquinaweb.com/block-posters-convierte-imagenes-en-carteles-gigantes/) hacia la herramienta.
 - [ ] Fase 2: efectos artísticos (semitono, esténcil…).
 
 ## Licencia

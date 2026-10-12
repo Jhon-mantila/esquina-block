@@ -15,6 +15,24 @@ return [
 
     'review_url' => 'https://esquinaweb.com/block-posters-convierte-imagenes-en-carteles-gigantes/',
 
+    'privacy_url' => 'https://esquinaweb.com/politica-de-privacidad/',
+
+    'cookies_url' => 'https://esquinaweb.com/politica-de-cookies/',
+
+    /*
+    | Fuera de producción no se carga AdSense, para no generar impresiones ni
+    | clics inválidos durante el desarrollo. Los bloques manuales solo se
+    | muestran si tienen un ID de bloque (data-ad-slot) configurado.
+    */
+    'adsense' => [
+        'enabled' => (bool) env('ADSENSE_ENABLED', env('APP_ENV') === 'production'),
+        'client' => env('ADSENSE_CLIENT', 'ca-pub-1852556021136727'),
+        'slots' => [
+            'after_tool' => env('ADSENSE_SLOT_AFTER_TOOL'),
+            'before_faq' => env('ADSENSE_SLOT_BEFORE_FAQ'),
+        ],
+    ],
+
     'faqs' => [
         [
             'q' => '¿Esquina Block es gratis?',
