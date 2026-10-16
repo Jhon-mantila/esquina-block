@@ -202,6 +202,10 @@
                 Tus imágenes nunca salen de tu dispositivo.
             </p>
             <p class="mt-2">
+                ¿Prefieres generar plantillas imprimibles y hojas para recortar?
+                Prueba <a href="{{ $seo['sibling_url'] }}" class="text-blue-700 hover:underline">{{ $seo['sibling_label'] }}</a>.
+            </p>
+            <p class="mt-2">
                 ¿Buscas otras opciones? Lee nuestra <a href="{{ $seo['review_url'] }}" class="text-blue-700 hover:underline">reseña de Block Posters</a>.
             </p>
             <p class="mt-2">

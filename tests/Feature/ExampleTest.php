@@ -15,6 +15,31 @@ class ExampleTest extends TestCase
             ->assertInertia(fn (Assert $page) => $page->component('EsquinaBlock/Index'));
     }
 
+    public function test_esquina_cut_carga_correctamente(): void
+    {
+        // Simula el Alias Apache /esquinacut → public/ (pathInfo = "/", basePath = "/esquinacut").
+        // MakesHttpRequests::call no aplica bien el base path de un subdirectorio; manejamos el Request a mano.
+        $request = \Illuminate\Http\Request::create('http://localhost/esquinacut/', 'GET', server: [
+            'SCRIPT_NAME' => '/esquinacut/index.php',
+            'SCRIPT_FILENAME' => public_path('index.php'),
+        ]);
+
+        $response = $this->app->handle($request);
+
+        $this->assertSame(200, $response->getStatusCode());
+        $content = $response->getContent();
+        $this->assertStringContainsString('Esquina Cut', $content);
+        $this->assertStringContainsString('EsquinaCut\\/Index', $content);
+        $this->assertStringContainsString('plantillas imprimibles', $content);
+        $this->assertStringContainsString('contornos de corte', $content);
+        $this->assertStringContainsString('SoftwareApplication', $content);
+        $this->assertStringContainsString('FAQPage', $content);
+        $this->assertStringContainsString('Preguntas frecuentes', $content);
+        $this->assertStringContainsString('¿Es gratis Esquina Cut?', $content);
+        $this->assertStringContainsString('aria-label="Volver arriba"', $content);
+        $this->assertStringContainsString('esquinablock', $content);
+    }
+
     public function test_no_crea_cookies(): void
     {
         $this->get('/')->assertCookieMissing('esquinablock_session')->assertCookieMissing('XSRF-TOKEN');

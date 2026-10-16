@@ -17,6 +17,16 @@ class HandleInertiaRequests extends Middleware
     protected $rootView = 'app';
 
     /**
+     * Cada herramienta tiene su propia plantilla Blade (SEO / FAQ distintos).
+     */
+    public function rootView(Request $request): string
+    {
+        return str_contains($request->getBasePath(), 'esquinacut')
+            ? 'esquinacut'
+            : 'app';
+    }
+
+    /**
      * Determines the current asset version.
      *
      * @see https://inertiajs.com/asset-versioning

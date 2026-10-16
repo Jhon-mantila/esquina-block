@@ -2,8 +2,11 @@
 
 Herramienta web gratuita para **dividir una imagen en varias hojas A4 o Carta e imprimir un póster gigante** (estilo *block poster* / *rasterbator*). El usuario sube una imagen, elige filas y columnas, ve la previsualización y descarga un PDF listo para imprimir.
 
-- **Producción:** https://esquinaweb.com/esquinablock
+- **Producción (póster):** https://esquinaweb.com/esquinablock
+- **Producción (cut):** https://esquinaweb.com/esquinacut
 - **Proyecto de:** [EsquinaWeb](https://esquinaweb.com)
+
+En el mismo código vive **Esquina Cut**: varias imágenes en un grid con contornos de corte y PDF imprimible. Ambas URLs apuntan a la misma carpeta `public/` (Alias Apache).
 
 ## Características
 
@@ -71,20 +74,29 @@ npm install
 
 ### Levantar el proyecto simulando el subdirectorio
 
-En producción la app vive en `/esquinablock`, no en la raíz. Para reproducirlo en local se usa la carpeta `.dev-root/` (ignorada por git), que contiene un enlace a `public/` con ese nombre:
+En producción la app vive en subdirectorios (`/esquinablock`, `/esquinacut`), no en la raíz. En local se usa `.dev-root/` (ignorada por git) con enlaces a `public/`:
 
 ```bash
-mkdir -p .dev-root && ln -sfn ../public .dev-root/esquinablock
+mkdir -p .dev-root
+ln -sfn ../public .dev-root/esquinablock
+ln -sfn ../public .dev-root/esquinacut
 ```
 
 Luego, en dos terminales:
 
 ```bash
-php -S 127.0.0.1:8000 -t .dev-root   # servidor PHP
-npm run dev                          # Vite con recarga en caliente
+npm run serve    # o: bash dev-serve.sh
+npm run dev      # Vite (opcional si ya hiciste npm run build)
 ```
 
-Abre http://localhost:8000/esquinablock/
+Abre (preferible `127.0.0.1` si tienes Docker Desktop):
+- http://127.0.0.1:8000/esquinablock/
+- http://127.0.0.1:8000/esquinacut/
+- http://127.0.0.1:8000/  (índice con enlaces)
+
+> **Docker + WSL:** al encender Docker Desktop, a veces `http://localhost:8000` deja de llegar a tu distro (el navegador usa IPv6 `::1`). Usa `http://127.0.0.1:8000/...` o la IP que imprime `npm run serve`. `dev-serve.sh` escucha en IPv4 e IPv6 para reducir ese fallo.
+>
+> No uses `php artisan serve`: ahí no existen `/esquinablock` ni `/esquinacut` y verás 404.
 
 > Si prefieres no usar Vite en modo desarrollo, compila una vez con `npm run build` y deja solo el servidor PHP.
 
@@ -154,6 +166,7 @@ Dentro del `<VirtualHost *:443>` de esquinaweb.com:
 
 ```apache
 Alias /esquinablock /var/www/esquina-block/public
+Alias /esquinacut /var/www/esquina-block/public
 
 <Directory /var/www/esquina-block/public>
     Options -Indexes +FollowSymLinks

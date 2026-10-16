@@ -15,6 +15,11 @@ return [
 
     'review_url' => 'https://esquinaweb.com/block-posters-convierte-imagenes-en-carteles-gigantes/',
 
+    'sibling_url' => 'https://esquinaweb.com/esquinacut/',
+
+    // Anchor con keywords SEO (dofollow, sin rel=nofollow).
+    'sibling_label' => 'Esquina Cut — plantillas imprimibles con contornos de corte',
+
     'privacy_url' => 'https://esquinaweb.com/politica-de-privacidad/',
 
     'cookies_url' => 'https://esquinaweb.com/politica-de-cookies/',
