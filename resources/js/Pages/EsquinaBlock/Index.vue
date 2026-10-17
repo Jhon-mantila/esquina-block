@@ -1,5 +1,6 @@
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue';
+import { trackDescargarPdf, trackGenerarPdf, trackSubirImagen } from '@/analytics';
 import GridPreview from '@/Components/GridPreview.vue';
 import GridSettings from '@/Components/GridSettings.vue';
 import ImageUploader from '@/Components/ImageUploader.vue';
@@ -49,8 +50,22 @@ function openPicker() {
 
 function onPick(event) {
     const selected = event.target.files?.[0];
-    if (selected) load(selected);
+    if (selected) {
+        trackSubirImagen('block', 1);
+        load(selected);
+    }
     event.target.value = '';
+}
+
+function onUploadSelect(file) {
+    trackSubirImagen('block', 1);
+    load(file);
+}
+
+function onDownloadPdf() {
+    trackGenerarPdf('block');
+    trackDescargarPdf('block', 'esquinablock.pdf');
+    download();
 }
 
 function onDragOver() {
@@ -64,7 +79,10 @@ function onDragLeave(event) {
 function onDrop(event) {
     draggingOver.value = false;
     const selected = event.dataTransfer.files?.[0];
-    if (selected) load(selected);
+    if (selected) {
+        trackSubirImagen('block', 1);
+        load(selected);
+    }
 }
 
 async function showDemo() {
@@ -156,7 +174,7 @@ onMounted(showDemo);
                     {{ preparingDemo ? 'Preparando ejemplo…' : 'Cargando imagen…' }}
                 </p>
                 <template v-else>
-                    <ImageUploader @select="load" />
+                    <ImageUploader @select="onUploadSelect" />
                     <p class="mt-3 text-center text-sm text-slate-500">
                         ¿No tienes una imagen a mano?
                         <button type="button" class="font-medium text-blue-700 hover:underline" @click="showDemo">Ver un ejemplo</button>
@@ -198,7 +216,7 @@ onMounted(showDemo);
                         :quality="quality"
                         :done="pdfDone"
                         :error="pdfError"
-                        @generate="download"
+                        @generate="onDownloadPdf"
                     />
                     <p class="mt-4 rounded-lg bg-amber-50 p-3 text-xs text-amber-900">
                         <strong>Importante:</strong> imprime a escala 100 % («tamaño real»), sin «ajustar a página».

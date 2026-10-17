@@ -71,6 +71,8 @@
 
         <script type="application/ld+json">{!! json_encode($schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) !!}</script>
 
+        @include('partials.ga4')
+
         @if (config('esquinablock.adsense.enabled'))
             <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ config('esquinablock.adsense.client') }}" crossorigin="anonymous"></script>
         @endif
@@ -203,7 +205,7 @@
             </p>
             <p class="mt-2">
                 ¿Prefieres generar plantillas imprimibles y hojas para recortar?
-                Prueba <a href="{{ $seo['sibling_url'] }}" class="text-blue-700 hover:underline">{{ $seo['sibling_label'] }}</a>.
+                Prueba <a href="{{ $seo['sibling_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('block','cut')">{{ $seo['sibling_label'] }}</a>.
             </p>
             <p class="mt-2">
                 ¿Buscas otras opciones? Lee nuestra <a href="{{ $seo['review_url'] }}" class="text-blue-700 hover:underline">reseña de Block Posters</a>.

@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'ga4' => [
+        'measurement_id' => env('GA4_MEASUREMENT_ID', 'G-XXXXXXXXXX'),
+        // Solo local: fuerza carga de gtag aunque no sea production.
+        'debug' => (bool) env('GA4_DEBUG', false),
+    ],
+
 ];

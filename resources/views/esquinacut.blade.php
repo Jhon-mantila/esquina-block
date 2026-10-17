@@ -73,6 +73,8 @@
 
         <script type="application/ld+json">{!! json_encode($schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) !!}</script>
 
+        @include('partials.ga4')
+
         @if (config('esquinacut.adsense.enabled'))
             <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ config('esquinacut.adsense.client') }}" crossorigin="anonymous"></script>
         @endif
@@ -194,7 +196,7 @@
             </p>
             <p class="mt-2">
                 ¿Quieres un póster gigante en varias hojas?
-                Prueba <a href="{{ $seo['sibling_url'] }}" class="text-blue-700 hover:underline">{{ $seo['sibling_label'] }}</a>.
+                Prueba <a href="{{ $seo['sibling_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('cut','block')">{{ $seo['sibling_label'] }}</a>.
             </p>
             <p class="mt-2">
                 <a href="{{ $seo['privacy_url'] }}" class="hover:text-blue-700 hover:underline">Política de privacidad</a>

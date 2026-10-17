@@ -1,5 +1,6 @@
 <script setup>
 import { computed, onMounted, reactive, ref, watch } from 'vue';
+import { trackDescargarPdf, trackGenerarPdf, trackSubirImagen } from '@/analytics';
 import BorderControls from '@/Components/EsquinaCut/BorderControls.vue';
 import GridControls from '@/Components/EsquinaCut/GridControls.vue';
 import ImageList from '@/Components/EsquinaCut/ImageList.vue';
@@ -88,6 +89,7 @@ function onSelectFiles(files) {
         page.title = '';
         page.subtitle = '';
     }
+    trackSubirImagen('cut', files.length);
     const { errors } = addFiles(files);
     if (errors.length) showErrors(errors);
     scheduleSave();
@@ -158,6 +160,7 @@ async function onGenerate() {
         return;
     }
 
+    trackGenerarPdf('cut');
     generating.value = true;
     progress.value = 0;
     error.value = '';
@@ -185,6 +188,7 @@ async function onGenerate() {
                 progress.value = value;
             },
         );
+        trackDescargarPdf('cut', 'esquinacut.pdf');
     } catch (e) {
         error.value = e?.message || 'No pudimos generar el PDF. Prueba con menos imágenes o un grid más denso.';
     } finally {
