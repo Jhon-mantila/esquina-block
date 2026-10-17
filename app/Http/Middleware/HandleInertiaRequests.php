@@ -21,9 +21,17 @@ class HandleInertiaRequests extends Middleware
      */
     public function rootView(Request $request): string
     {
-        return str_contains($request->getBasePath(), 'esquinacut')
-            ? 'esquinacut'
-            : 'app';
+        $base = $request->getBasePath();
+
+        if (str_contains($base, 'esquinacut')) {
+            return 'esquinacut';
+        }
+
+        if (str_contains($base, 'esquinaqr')) {
+            return 'esquinaqr';
+        }
+
+        return 'app';
     }
 
     /**

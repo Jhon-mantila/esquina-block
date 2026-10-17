@@ -40,6 +40,30 @@ class ExampleTest extends TestCase
         $this->assertStringContainsString('esquinablock', $content);
     }
 
+    public function test_esquina_qr_carga_correctamente(): void
+    {
+        $request = \Illuminate\Http\Request::create('http://localhost/esquinaqr/', 'GET', server: [
+            'SCRIPT_NAME' => '/esquinaqr/index.php',
+            'SCRIPT_FILENAME' => public_path('index.php'),
+        ]);
+
+        $response = $this->app->handle($request);
+
+        $this->assertSame(200, $response->getStatusCode());
+        $content = $response->getContent();
+        $this->assertStringContainsString('EsquinaQR\\/Index', $content);
+        $this->assertStringContainsString('EsquinaQR', $content);
+        $this->assertStringContainsString('Generador de códigos QR personalizados', $content);
+        $this->assertStringContainsString('SoftwareApplication', $content);
+        $this->assertStringContainsString('FAQPage', $content);
+        $this->assertStringContainsString('¿Es gratis EsquinaQR?', $content);
+        $this->assertStringContainsString('¿Cómo hago un QR para mi Wi-Fi?', $content);
+        $this->assertStringContainsString('¿Los QR caducan?', $content);
+        $this->assertStringContainsString('Cómo crear un QR para Wi-Fi', $content);
+        $this->assertStringContainsString('Wi-Fi, vCard, URL', $content);
+        $this->assertStringContainsString('aria-label="Volver arriba"', $content);
+    }
+
     public function test_no_crea_cookies(): void
     {
         $this->get('/')->assertCookieMissing('esquinablock_session')->assertCookieMissing('XSRF-TOKEN');

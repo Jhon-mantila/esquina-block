@@ -7,12 +7,12 @@
  *   php -S [::]:8000 -t .dev-root dev-router.php
  *   # o: npm run serve
  *
- * Sirve /esquinablock y /esquinacut como en producción (Alias Apache).
+ * Sirve /esquinablock, /esquinacut y /esquinaqr como en producción (Alias Apache).
  */
 
 $uri = urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '/');
 
-if ($uri === '/esquinablock' || $uri === '/esquinacut') {
+if ($uri === '/esquinablock' || $uri === '/esquinacut' || $uri === '/esquinaqr') {
     header('Location: '.$uri.'/', true, 301);
     exit;
 }
@@ -25,16 +25,17 @@ if ($uri === '/' || $uri === '') {
     echo '<h1>Servidor local</h1><p>Elige una herramienta:</p><ul>';
     echo '<li><a href="/esquinablock/">Esquina Block</a> — póster en varias hojas</li>';
     echo '<li><a href="/esquinacut/">Esquina Cut</a> — plantillas imprimibles con contornos de corte</li>';
+    echo '<li><a href="/esquinaqr/">EsquinaQR</a> — generador de códigos QR</li>';
     echo '</ul></body></html>';
 
     return true;
 }
 
-if (! preg_match('#^/(esquinablock|esquinacut)(/.*)?$#', $uri, $matches)) {
+if (! preg_match('#^/(esquinablock|esquinacut|esquinaqr)(/.*)?$#', $uri, $matches)) {
     http_response_code(404);
     header('Content-Type: text/html; charset=UTF-8');
     echo '<!DOCTYPE html><html lang="es"><body style="font-family:system-ui;margin:3rem">';
-    echo '<p>404. Prueba <a href="/esquinablock/">/esquinablock/</a> o <a href="/esquinacut/">/esquinacut/</a>.</p>';
+    echo '<p>404. Prueba <a href="/esquinablock/">/esquinablock/</a>, <a href="/esquinacut/">/esquinacut/</a> o <a href="/esquinaqr/">/esquinaqr/</a>.</p>';
     echo '</body></html>';
 
     return true;
