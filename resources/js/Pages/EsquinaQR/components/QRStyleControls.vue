@@ -1,4 +1,5 @@
 <script setup>
+import { trackSubirLogoQr } from '@/analytics';
 import { validateLogoFile } from '../validateQr.js';
 
 const props = defineProps({
@@ -57,6 +58,7 @@ function onLogoPick(event) {
         patch({ logoError: 'No se pudo leer el archivo del logo.' });
     };
     reader.onload = () => {
+        trackSubirLogoQr();
         patch({
             logoSrc: String(reader.result || ''),
             logoName: file.name,

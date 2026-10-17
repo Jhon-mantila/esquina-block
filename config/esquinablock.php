@@ -20,6 +20,10 @@ return [
     // Anchor con keywords SEO (dofollow, sin rel=nofollow).
     'sibling_label' => 'Esquina Cut — plantillas imprimibles con contornos de corte',
 
+    'sibling_qr_url' => 'https://esquinaweb.com/esquinaqr/',
+
+    'sibling_qr_label' => 'EsquinaQR — generador de códigos QR personalizados',
+
     'privacy_url' => 'https://esquinaweb.com/politica-de-privacidad/',
 
     'cookies_url' => 'https://esquinaweb.com/politica-de-cookies/',

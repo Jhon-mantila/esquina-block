@@ -199,6 +199,10 @@
                 Prueba <a href="{{ $seo['sibling_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('cut','block')">{{ $seo['sibling_label'] }}</a>.
             </p>
             <p class="mt-2">
+                ¿Necesitas un código QR con logo y colores?
+                Prueba <a href="{{ $seo['sibling_qr_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('cut','qr')">{{ $seo['sibling_qr_label'] }}</a>.
+            </p>
+            <p class="mt-2">
                 <a href="{{ $seo['privacy_url'] }}" class="hover:text-blue-700 hover:underline">Política de privacidad</a>
                 <span aria-hidden="true">·</span>
                 <a href="{{ $seo['cookies_url'] }}" class="hover:text-blue-700 hover:underline">Política de cookies</a>

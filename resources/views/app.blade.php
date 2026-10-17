@@ -208,6 +208,10 @@
                 Prueba <a href="{{ $seo['sibling_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('block','cut')">{{ $seo['sibling_label'] }}</a>.
             </p>
             <p class="mt-2">
+                ¿Necesitas un código QR con logo y colores?
+                Prueba <a href="{{ $seo['sibling_qr_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('block','qr')">{{ $seo['sibling_qr_label'] }}</a>.
+            </p>
+            <p class="mt-2">
                 ¿Buscas otras opciones? Lee nuestra <a href="{{ $seo['review_url'] }}" class="text-blue-700 hover:underline">reseña de Block Posters</a>.
             </p>
             <p class="mt-2">

@@ -1,5 +1,6 @@
 <script setup>
 import { computed, onMounted, reactive, ref, watch } from 'vue';
+import { trackDescargarQr, trackQrType } from '@/analytics';
 import { buildQrPayload } from './buildQrPayload.js';
 import { downloadQr } from './downloadQr.js';
 import { clearQrDraft, loadQrDraft, saveQrDraft } from './qrDraft.js';
@@ -76,6 +77,9 @@ const previewReady = computed(() => validation.value.valid && Boolean(payload.va
 const showHints = computed(() => !validation.value.valid);
 
 function selectType(id) {
+    if (id !== type.value) {
+        trackQrType(id);
+    }
     type.value = id;
     downloadError.value = '';
 }
@@ -90,6 +94,7 @@ async function onDownload(extension) {
 
     downloading.value = extension;
     try {
+        trackDescargarQr(extension, type.value);
         await downloadQr(payload.value, style, extension);
     } catch (e) {
         downloadError.value = e?.message || 'No se pudo descargar el QR. Prueba de nuevo.';

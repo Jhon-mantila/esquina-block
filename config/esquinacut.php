@@ -24,6 +24,10 @@ return [
 
     'sibling_label' => 'Esquina Block',
 
+    'sibling_qr_url' => 'https://esquinaweb.com/esquinaqr/',
+
+    'sibling_qr_label' => 'EsquinaQR — generador de códigos QR personalizados',
+
     'privacy_url' => 'https://esquinaweb.com/politica-de-privacidad/',
 
     'cookies_url' => 'https://esquinaweb.com/politica-de-cookies/',

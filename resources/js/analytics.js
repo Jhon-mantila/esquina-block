@@ -1,5 +1,5 @@
 /**
- * GA4 (gtag.js) — único punto de tracking de Esquina Block / Esquina Cut.
+ * GA4 (gtag.js) — único punto de tracking de Esquina Block / Cut / QR.
  * Solo envía eventos si gtag existe. En localhost hace falta GA4_DEBUG=true.
  */
 import { router } from '@inertiajs/vue3';
@@ -55,14 +55,45 @@ export function trackSubirImagen(tool, count = 1) {
 }
 
 /**
- * @param {'block'|'cut'} fromTool
- * @param {'block'|'cut'} toTool
+ * @param {'block'|'cut'|'qr'} fromTool
+ * @param {'block'|'cut'|'qr'} toTool
  */
 export function trackCrossToolClick(fromTool, toTool) {
     trackEvent('cross_tool_click', {
         from_tool: fromTool,
         to_tool: toTool,
         link_url: window.location.href,
+    });
+}
+
+/**
+ * @param {'url'|'wifi'|'vcard'|'email'|'sms'} qrType
+ */
+export function trackQrType(qrType) {
+    trackEvent('qr_type_select', {
+        tool: 'qr',
+        qr_type: qrType,
+    });
+}
+
+/**
+ * @param {'png'|'svg'} extension
+ * @param {string} [qrType]
+ */
+export function trackDescargarQr(extension, qrType = '') {
+    trackEvent('file_download', {
+        tool: 'qr',
+        file_name: `esquinaqr.${extension}`,
+        file_extension: extension,
+        qr_type: qrType,
+    });
+}
+
+export function trackSubirLogoQr() {
+    trackEvent('upload_image', {
+        tool: 'qr',
+        image_count: 1,
+        asset: 'logo',
     });
 }
 
