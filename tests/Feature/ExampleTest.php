@@ -67,6 +67,30 @@ class ExampleTest extends TestCase
             ->assertDontSee('min-[1536px]:block', false);
     }
 
+    public function test_adsense_en_esquina_cut_con_bloques_configurados(): void
+    {
+        config([
+            'esquinacut.adsense.enabled' => true,
+            'esquinacut.adsense.slots.after_tool' => '2222222222',
+            'esquinacut.adsense.slots.before_faq' => '3333333333',
+            'esquinacut.adsense.slots.side_left' => '4444444444',
+        ]);
+
+        $request = \Illuminate\Http\Request::create('http://localhost/esquinacut/', 'GET', server: [
+            'SCRIPT_NAME' => '/esquinacut/index.php',
+            'SCRIPT_FILENAME' => public_path('index.php'),
+        ]);
+
+        $response = $this->app->handle($request);
+        $content = $response->getContent();
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertStringContainsString('adsbygoogle.js?client=ca-pub-1852556021136727', $content);
+        $this->assertStringContainsString('data-ad-slot="2222222222"', $content);
+        $this->assertStringContainsString('data-ad-slot="3333333333"', $content);
+        $this->assertStringContainsString('4444444444', $content);
+    }
+
     public function test_anuncios_laterales_con_bloques_configurados(): void
     {
         config([

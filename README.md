@@ -146,7 +146,7 @@ Si no lo tiene (es el caso del VPS actual), compila en local y sube la carpeta `
 
 ```bash
 npm run build
-rsync -az --delete public/build/ root@2.24.217.27:/var/www/esquina-block/public/build/
+rsync -az --delete public/build/ usuario@tu-servidor:/var/www/esquina-block/public/build/
 ```
 
 ### 4. Permisos y cachés
@@ -197,7 +197,7 @@ En local, tras hacer `git push`:
 
 ```bash
 npm run build
-rsync -az --delete public/build/ root@2.24.217.27:/var/www/esquina-block/public/build/
+rsync -az --delete public/build/ usuario@tu-servidor:/var/www/esquina-block/public/build/
 ```
 
 En el servidor:
@@ -227,7 +227,9 @@ Además hay bloques manuales que solo aparecen si se configura su ID de bloque e
 
 Los laterales son verticales (160 × 600, o 300 × 600 desde 1800 px de ancho) y solo se crean en pantallas de al menos 1536 × 800 px, donde caben en el hueco a los lados del contenido sin taparlo.
 
-Los formatos de superposición (pantalla completa, laterales y anclado) vienen de los anuncios automáticos. En el panel de AdSense, la zona superior de `/esquinablock` está excluida para que no aparezca un banner encima del título.
+Los mismos bloques y el mismo script se usan en **Esquina Cut** (`/esquinacut`).
+
+Los formatos de superposición (pantalla completa, laterales y anclado) vienen de los anuncios automáticos. En el panel de AdSense, conviene excluir la zona superior de `/esquinablock` y `/esquinacut` para que no aparezca un banner encima del título.
 
 Para desactivar AdSense en producción: `ADSENSE_ENABLED=false`. Tras cambiar el `.env`, ejecutar `php artisan config:cache`.
 

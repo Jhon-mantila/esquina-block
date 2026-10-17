@@ -29,6 +29,21 @@ return [
     'cookies_url' => 'https://esquinaweb.com/politica-de-cookies/',
 
     /*
+    | Mismo publisher y mismos bloques que Esquina Block (mismo .env).
+    | El script habilita también los anuncios automáticos del dominio.
+    */
+    'adsense' => [
+        'enabled' => (bool) env('ADSENSE_ENABLED', env('APP_ENV') === 'production'),
+        'client' => env('ADSENSE_CLIENT', 'ca-pub-1852556021136727'),
+        'slots' => [
+            'after_tool' => env('ADSENSE_SLOT_AFTER_TOOL'),
+            'before_faq' => env('ADSENSE_SLOT_BEFORE_FAQ'),
+            'side_left' => env('ADSENSE_SLOT_SIDE_LEFT'),
+            'side_right' => env('ADSENSE_SLOT_SIDE_RIGHT'),
+        ],
+    ],
+
+    /*
     | Límite real de la herramienta (useCutImages). Las FAQ y el copy SEO
     | deben coincidir con este número.
     */

@@ -1,5 +1,9 @@
 @php
-    $adsense = config('esquinablock.adsense');
+    $adsense = $adsense ?? (
+        str_contains(request()->getBasePath(), 'esquinacut')
+            ? config('esquinacut.adsense')
+            : config('esquinablock.adsense')
+    );
     $sideSlots = array_filter([
         'left' => $adsense['slots']['side_left'] ?? null,
         'right' => $adsense['slots']['side_right'] ?? null,
