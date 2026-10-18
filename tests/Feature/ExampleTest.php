@@ -139,6 +139,33 @@ class ExampleTest extends TestCase
         $this->assertStringContainsString('4444444444', $content);
     }
 
+    public function test_adsense_y_ga4_en_esquina_pdf(): void
+    {
+        config([
+            'services.ga4.measurement_id' => 'G-TESTPDF123',
+            'services.ga4.debug' => true,
+            'esquinapdf.adsense.enabled' => true,
+            'esquinapdf.adsense.slots.after_tool' => '5555555555',
+            'esquinapdf.adsense.slots.before_faq' => '6666666666',
+            'esquinapdf.adsense.slots.side_left' => '7777777777',
+        ]);
+
+        $request = \Illuminate\Http\Request::create('http://localhost/esquinapdf/', 'GET', server: [
+            'SCRIPT_NAME' => '/esquinapdf/index.php',
+            'SCRIPT_FILENAME' => public_path('index.php'),
+        ]);
+
+        $response = $this->app->handle($request);
+        $content = $response->getContent();
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertStringContainsString('googletagmanager.com/gtag/js?id=G-TESTPDF123', $content);
+        $this->assertStringContainsString('adsbygoogle.js?client=ca-pub-1852556021136727', $content);
+        $this->assertStringContainsString('data-ad-slot="5555555555"', $content);
+        $this->assertStringContainsString('data-ad-slot="6666666666"', $content);
+        $this->assertStringContainsString('7777777777', $content);
+    }
+
     public function test_anuncios_laterales_con_bloques_configurados(): void
     {
         config([

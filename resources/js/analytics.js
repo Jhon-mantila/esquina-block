@@ -1,5 +1,5 @@
 /**
- * GA4 (gtag.js) — único punto de tracking de Esquina Block / Cut / QR.
+ * GA4 (gtag.js) — tracking de Esquina Block / Cut / QR / PDF.
  * Solo envía eventos si gtag existe. En localhost hace falta GA4_DEBUG=true.
  */
 import { router } from '@inertiajs/vue3';
@@ -25,14 +25,14 @@ export function trackEvent(eventName, params = {}) {
 }
 
 /**
- * @param {'block'|'cut'} tool
+ * @param {'block'|'cut'|'pdf'} tool
  */
 export function trackGenerarPdf(tool) {
     trackEvent('generate_pdf', { tool });
 }
 
 /**
- * @param {'block'|'cut'} tool
+ * @param {'block'|'cut'|'pdf'} tool
  * @param {string} [fileName]
  */
 export function trackDescargarPdf(tool, fileName = '') {
@@ -44,7 +44,7 @@ export function trackDescargarPdf(tool, fileName = '') {
 }
 
 /**
- * @param {'block'|'cut'} tool
+ * @param {'block'|'cut'|'pdf'} tool
  * @param {number} count
  */
 export function trackSubirImagen(tool, count = 1) {
@@ -55,8 +55,8 @@ export function trackSubirImagen(tool, count = 1) {
 }
 
 /**
- * @param {'block'|'cut'|'qr'} fromTool
- * @param {'block'|'cut'|'qr'} toTool
+ * @param {'block'|'cut'|'qr'|'pdf'} fromTool
+ * @param {'block'|'cut'|'qr'|'pdf'} toTool
  */
 export function trackCrossToolClick(fromTool, toTool) {
     trackEvent('cross_tool_click', {
