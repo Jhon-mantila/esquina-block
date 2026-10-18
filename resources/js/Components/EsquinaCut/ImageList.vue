@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, watch } from 'vue';
+import { ref } from 'vue';
 
 const props = defineProps({
     images: { type: Array, default: () => [] },
@@ -10,41 +10,17 @@ const props = defineProps({
 
 const emit = defineEmits(['remove', 'move-up', 'move-down', 'clear-all', 'reorder']);
 
-const collapsed = ref(false);
 const dragFrom = ref(null);
 const dragOver = ref(null);
 
-const perPage = computed(() => Math.max(1, props.cols * props.rows));
-const gridCols = computed(() => Math.min(Math.max(2, props.cols), 5));
-
-/** Con muchas imágenes, se recoge sola para no alargar el scroll. */
-watch(
-    () => props.images.length,
-    (n, prev) => {
-        if (n > perPage.value && (prev === undefined || prev <= perPage.value)) {
-            collapsed.value = true;
-        }
-        if (n <= perPage.value) {
-            collapsed.value = false;
-        }
-    },
-    { immediate: true },
-);
-
-const previewCap = computed(() => gridCols.value * 2);
-const visibleImages = computed(() =>
-    collapsed.value ? props.images.slice(0, previewCap.value) : props.images,
-);
-const hiddenCount = computed(() =>
-    collapsed.value ? Math.max(0, props.images.length - previewCap.value) : 0,
-);
-
 function pageOf(index) {
-    return Math.floor(index / perPage.value) + 1;
+    const perPage = Math.max(1, props.cols * props.rows);
+    return Math.floor(index / perPage) + 1;
 }
 
 function isPageStart(index) {
-    return index > 0 && index % perPage.value === 0;
+    const perPage = Math.max(1, props.cols * props.rows);
+    return index > 0 && index % perPage === 0;
 }
 
 function onDragStart(index, event) {
@@ -88,50 +64,15 @@ function onDragEnd() {
                     ({{ images.length }} · {{ cols }}×{{ rows }})
                 </span>
             </h3>
-            <div class="flex flex-wrap items-center gap-2">
-                <button
-                    v-if="images.length > previewCap"
-                    type="button"
-                    class="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold shadow-sm transition"
-                    :class="collapsed
-                        ? 'bg-blue-600 text-white hover:bg-blue-700'
-                        : 'border border-blue-600 bg-blue-50 text-blue-800 hover:bg-blue-100'"
-                    :aria-expanded="!collapsed"
-                    @click="collapsed = !collapsed"
-                >
-                    <svg
-                        class="h-4 w-4"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        aria-hidden="true"
-                    >
-                        <path
-                            v-if="collapsed"
-                            d="M6 9l6 6 6-6"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                        />
-                        <path
-                            v-else
-                            d="M18 15l-6-6-6 6"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                        />
-                    </svg>
-                    {{ collapsed ? `Desplegar todas (${images.length})` : 'Recoger' }}
-                </button>
-                <button
-                    v-if="images.length"
-                    type="button"
-                    class="text-sm font-medium text-red-700 hover:underline disabled:cursor-not-allowed disabled:text-slate-400 disabled:no-underline"
-                    :disabled="disabled"
-                    @click="$emit('clear-all')"
-                >
-                    Eliminar todas
-                </button>
-            </div>
+            <button
+                v-if="images.length"
+                type="button"
+                class="text-sm font-medium text-red-700 hover:underline disabled:cursor-not-allowed disabled:text-slate-400 disabled:no-underline"
+                :disabled="disabled"
+                @click="$emit('clear-all')"
+            >
+                Eliminar todas
+            </button>
         </div>
 
         <p v-if="!images.length" class="rounded-lg border border-dashed border-slate-200 bg-slate-50 px-4 py-8 text-center text-sm text-slate-500">
@@ -140,25 +81,23 @@ function onDragEnd() {
 
         <div
             v-else
-            class="rounded-xl border border-slate-200 bg-white p-3 sm:p-4"
+            class="rounded-xl border border-slate-200 bg-white p-3"
         >
-            <ul
-                class="grid gap-2 sm:gap-3"
-                :style="{ gridTemplateColumns: `repeat(${gridCols}, minmax(0, 1fr))` }"
-            >
-                <template v-for="(image, index) in visibleImages" :key="image.id">
+            <ul class="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:thin]">
+                <template v-for="(image, index) in images" :key="image.id">
                     <li
                         v-if="isPageStart(index)"
-                        class="col-span-full flex items-center gap-2 pt-1 text-[11px] font-semibold uppercase tracking-wide text-slate-400"
+                        class="flex w-6 shrink-0 flex-col items-center justify-center gap-1 self-stretch text-[10px] font-semibold uppercase tracking-wide text-slate-400"
                         aria-hidden="true"
+                        :title="`Página ${pageOf(index)}`"
                     >
-                        <span class="h-px flex-1 bg-slate-200" />
-                        Página {{ pageOf(index) }}
-                        <span class="h-px flex-1 bg-slate-200" />
+                        <span class="w-px flex-1 bg-slate-200" />
+                        P{{ pageOf(index) }}
+                        <span class="w-px flex-1 bg-slate-200" />
                     </li>
                     <li
                         :draggable="!disabled"
-                        class="group relative aspect-square overflow-hidden rounded-lg bg-slate-50 ring-1 ring-slate-200 transition"
+                        class="group relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-slate-50 ring-1 ring-slate-200 transition"
                         :class="[
                             disabled ? 'cursor-not-allowed' : 'cursor-grab active:cursor-grabbing',
                             dragOver === index ? 'ring-2 ring-blue-500' : '',
@@ -221,35 +160,9 @@ function onDragEnd() {
                     </li>
                 </template>
             </ul>
-
-            <button
-                v-if="hiddenCount > 0"
-                type="button"
-                class="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-3 py-3 text-sm font-semibold text-white shadow-sm hover:bg-blue-700"
-                @click="collapsed = false"
-            >
-                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                    <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-                +{{ hiddenCount }} más · Desplegar todas
-            </button>
-        </div>
-
-        <div v-if="images.length" class="mt-2 flex flex-wrap items-center justify-between gap-2">
-            <p class="text-xs text-slate-500">
-                Misma cuadrícula que la hoja ({{ cols }} columnas). Arrastra una miniatura para reordenar.
+            <p class="mt-2 text-xs text-slate-500">
+                Una fila · desliza horizontalmente · arrastra para reordenar.
             </p>
-            <button
-                v-if="images.length > previewCap && !collapsed"
-                type="button"
-                class="inline-flex items-center gap-1 rounded-lg border border-blue-600 bg-blue-50 px-3 py-1.5 text-sm font-semibold text-blue-800 hover:bg-blue-100"
-                @click="collapsed = true"
-            >
-                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                    <path d="M18 15l-6-6-6 6" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-                Recoger lista
-            </button>
         </div>
     </section>
 </template>

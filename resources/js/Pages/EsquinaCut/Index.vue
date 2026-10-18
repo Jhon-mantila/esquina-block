@@ -321,8 +321,12 @@ onMounted(async () => {
             {{ error }}
         </p>
 
-        <div class="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
-            <div class="space-y-6">
+        <!--
+            Igual que Esquina Block (preview a la izquierda).
+            Sección 1 hace scroll; sección 2 (vista previa) queda sticky.
+        -->
+        <div class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
+            <div class="flex flex-col gap-6">
                 <section class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
                     <div class="mb-4 flex items-center justify-between gap-3">
                         <h2 class="flex items-center gap-2 font-semibold text-slate-900">
@@ -393,9 +397,8 @@ onMounted(async () => {
                                 Ver un ejemplo
                             </button>
                         </p>
-                        <div class="mt-5">
+                        <div v-if="images.length" class="mt-4">
                             <ImageList
-                                v-if="images.length"
                                 :images="images"
                                 :cols="grid.cols"
                                 :rows="grid.rows"
@@ -412,11 +415,11 @@ onMounted(async () => {
 
                 <section
                     v-if="images.length && !preparingDemo"
-                    class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6"
+                    class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 lg:sticky lg:top-6"
                 >
-                    <h2 class="mb-4 flex items-center gap-2 font-semibold text-slate-900">
+                    <h2 class="mb-3 flex items-center gap-2 font-semibold text-slate-900">
                         <span class="grid h-6 w-6 place-items-center rounded-full bg-blue-600 text-xs text-white">2</span>
-                        Vista previa de la hoja
+                        Vista previa
                     </h2>
                     <TemplatePreview
                         :images="images"
@@ -436,10 +439,12 @@ onMounted(async () => {
                         :border="border"
                     />
                     <p class="mt-2 text-xs text-slate-500">
-                        Se actualiza al cambiar la cuadrícula, el contorno o el papel. Si hay varias páginas, usa las flechas.
+                        Se actualiza al cambiar cuadrícula, contorno o papel.
                     </p>
                 </section>
+            </div>
 
+            <div class="space-y-6">
                 <section class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
                     <h2 class="mb-4 flex items-center gap-2 font-semibold text-slate-900">
                         <span class="grid h-6 w-6 place-items-center rounded-full bg-blue-600 text-xs text-white">3</span>
@@ -474,17 +479,7 @@ onMounted(async () => {
                     <BorderControls v-model="border" :disabled="generating" />
                 </section>
 
-                <section class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 lg:hidden">
-                    <h2 class="mb-4 flex items-center gap-2 font-semibold text-slate-900">
-                        <span class="grid h-6 w-6 place-items-center rounded-full bg-blue-600 text-xs text-white">5</span>
-                        Página y título
-                    </h2>
-                    <PageControls v-model="page" :disabled="generating" :storage-label="storageLabel" />
-                </section>
-            </div>
-
-            <aside class="space-y-6 lg:sticky lg:top-6">
-                <section class="hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 lg:block">
+                <section class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
                     <h2 class="mb-4 flex items-center gap-2 font-semibold text-slate-900">
                         <span class="grid h-6 w-6 place-items-center rounded-full bg-blue-600 text-xs text-white">5</span>
                         Página y título
@@ -521,7 +516,7 @@ onMounted(async () => {
                         @reset="confirmReset"
                     />
                 </section>
-            </aside>
+            </div>
         </div>
     </div>
 </template>

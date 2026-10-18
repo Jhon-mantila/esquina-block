@@ -2,11 +2,12 @@
 
 Herramienta web gratuita para **dividir una imagen en varias hojas A4 o Carta e imprimir un póster gigante** (estilo *block poster* / *rasterbator*). El usuario sube una imagen, elige filas y columnas, ve la previsualización y descarga un PDF listo para imprimir.
 
-- **Producción (póster):** https://esquinaweb.com/esquinablock
-- **Producción (cut):** https://esquinaweb.com/esquinacut
+- **Producción (póster):** [https://esquinaweb.com/esquinablock](https://esquinaweb.com/esquinablock)
+- **Producción (cut):** [https://esquinaweb.com/esquinacut](https://esquinaweb.com/esquinacut)
+- **Producción (QR):** [https://esquinaweb.com/esquinaqr](https://esquinaweb.com/esquinaqr)
 - **Proyecto de:** [EsquinaWeb](https://esquinaweb.com)
 
-En el mismo código vive **Esquina Cut**: varias imágenes en un grid con contornos de corte y PDF imprimible. Ambas URLs apuntan a la misma carpeta `public/` (Alias Apache).
+En el mismo código viven **Esquina Cut** (plantillas con contornos de corte) y **EsquinaQR** (códigos QR personalizados). Las tres URLs apuntan a la misma carpeta `public/` (Alias Apache).
 
 ## Características
 
@@ -24,13 +25,15 @@ En el mismo código vive **Esquina Cut**: varias imágenes en un grid con contor
 
 ## Stack
 
-| Capa | Tecnología |
-|---|---|
-| Backend | Laravel 12 (PHP 8.2+) |
-| Puente | Inertia.js 3 + Ziggy 2 |
-| Frontend | Vue 3 (JavaScript) + Tailwind CSS 4 |
-| Build | Vite 7 |
-| PDF | jsPDF 4 (se carga solo al pulsar «Descargar PDF») |
+
+| Capa     | Tecnología                                        |
+| -------- | ------------------------------------------------- |
+| Backend  | Laravel 12 (PHP 8.2+)                             |
+| Puente   | Inertia.js 3 + Ziggy 2                            |
+| Frontend | Vue 3 (JavaScript) + Tailwind CSS 4               |
+| Build    | Vite 7                                            |
+| PDF      | jsPDF 4 (se carga solo al pulsar «Descargar PDF») |
+
 
 ## Estructura
 
@@ -90,9 +93,10 @@ npm run dev      # Vite (opcional si ya hiciste npm run build)
 ```
 
 Abre (preferible `127.0.0.1` si tienes Docker Desktop):
-- http://127.0.0.1:8000/esquinablock/
-- http://127.0.0.1:8000/esquinacut/
-- http://127.0.0.1:8000/  (índice con enlaces)
+
+- [http://127.0.0.1:8000/esquinablock/](http://127.0.0.1:8000/esquinablock/)
+- [http://127.0.0.1:8000/esquinacut/](http://127.0.0.1:8000/esquinacut/)
+- [http://127.0.0.1:8000/](http://127.0.0.1:8000/)  (índice con enlaces)
 
 > **Docker + WSL:** al encender Docker Desktop, a veces `http://localhost:8000` deja de llegar a tu distro (el navegador usa IPv6 `::1`). Usa `http://127.0.0.1:8000/...` o la IP que imprime `npm run serve`. `dev-serve.sh` escucha en IPv4 e IPv6 para reducir ese fallo.
 >
@@ -218,20 +222,66 @@ El script de AdSense (`ca-pub-1852556021136727`) se carga **solo con `APP_ENV=pr
 
 Además hay bloques manuales que solo aparecen si se configura su ID de bloque en el `.env`:
 
-| Variable | Ubicación | Valor en producción |
-|---|---|---|
-| `ADSENSE_SLOT_AFTER_TOOL` | Bajo la herramienta | `1409541666` |
-| `ADSENSE_SLOT_BEFORE_FAQ` | Antes de las preguntas frecuentes | `5157214983` |
-| `ADSENSE_SLOT_SIDE_LEFT` | Lateral izquierdo fijo | `7223965968` |
-| `ADSENSE_SLOT_SIDE_RIGHT` | Lateral derecho fijo | `3401190893` |
+
+| Variable                  | Ubicación                         | Valor en producción |
+| ------------------------- | --------------------------------- | ------------------- |
+| `ADSENSE_SLOT_AFTER_TOOL` | Bajo la herramienta               | `1409541666`        |
+| `ADSENSE_SLOT_BEFORE_FAQ` | Antes de las preguntas frecuentes | `5157214983`        |
+| `ADSENSE_SLOT_SIDE_LEFT`  | Lateral izquierdo fijo            | `7223965968`        |
+| `ADSENSE_SLOT_SIDE_RIGHT` | Lateral derecho fijo              | `3401190893`        |
+
 
 Los laterales son verticales (160 × 600, o 300 × 600 desde 1800 px de ancho) y solo se crean en pantallas de al menos 1536 × 800 px, donde caben en el hueco a los lados del contenido sin taparlo.
 
-Los mismos bloques y el mismo script se usan en **Esquina Cut** (`/esquinacut`).
+Los mismos bloques y el mismo script se usan en **Esquina Cut** (`/esquinacut`) y **EsquinaQR** (`/esquinaqr`).
 
-Los formatos de superposición (pantalla completa, laterales y anclado) vienen de los anuncios automáticos. En el panel de AdSense, conviene excluir la zona superior de `/esquinablock` y `/esquinacut` para que no aparezca un banner encima del título.
+Los formatos de superposición (pantalla completa, laterales y anclado) vienen de los anuncios automáticos. En el panel de AdSense, conviene excluir la zona superior de `/esquinablock`, `/esquinacut` y `/esquinaqr` para que no aparezca un banner encima del título.
 
 Para desactivar AdSense en producción: `ADSENSE_ENABLED=false`. Tras cambiar el `.env`, ejecutar `php artisan config:cache`.
+
+## Google Analytics 4 (eventos)
+
+Implementación en `resources/js/analytics.js` + snippet `resources/views/partials/ga4.blade.php` (gtag.js, solo producción, `GA4_MEASUREMENT_ID`). En local hace falta `GA4_DEBUG=true` y un ID real.
+
+En todas las herramientas se dispara `page_view` al cargar y en cada navegación Inertia (`page_path`, `page_location`, `page_title`).
+
+### Esquina Block (`/esquinablock`)
+
+
+| Evento GA4         | Cuándo                              | Parámetros                                                          |
+| ------------------ | ----------------------------------- | ------------------------------------------------------------------- |
+| `page_view`        | Carga / navegación                  | `page_path`, `page_location`, `page_title`                          |
+| `upload_image`     | Subir o soltar imagen               | `tool: block`, `image_count`                                        |
+| `generate_pdf`     | Pulsar «Descargar PDF» (generación) | `tool: block`                                                       |
+| `file_download`    | Misma acción (descarga)             | `tool: block`, `file_name: esquinablock.pdf`, `file_extension: pdf` |
+| `cross_tool_click` | Enlace del footer a Cut o QR        | `from_tool: block`, `to_tool: cut|qr`, `link_url`                   |
+
+
+### Esquina Cut (`/esquinacut`)
+
+
+| Evento GA4         | Cuándo                         | Parámetros                                                      |
+| ------------------ | ------------------------------ | --------------------------------------------------------------- |
+| `page_view`        | Carga / navegación             | `page_path`, `page_location`, `page_title`                      |
+| `upload_image`     | Subir o añadir imágenes        | `tool: cut`, `image_count`                                      |
+| `generate_pdf`     | Pulsar «Generar PDF»           | `tool: cut`                                                     |
+| `file_download`    | Tras generar el PDF con éxito  | `tool: cut`, `file_name: esquinacut.pdf`, `file_extension: pdf` |
+| `cross_tool_click` | Enlace del footer a Block o QR | `from_tool: cut`, `to_tool: block|qr`, `link_url`               |
+
+
+### EsquinaQR (`/esquinaqr`)
+
+
+| Evento GA4         | Cuándo                                          | Parámetros                                                              |
+| ------------------ | ----------------------------------------------- | ----------------------------------------------------------------------- |
+| `page_view`        | Carga / navegación                              | `page_path`, `page_location`, `page_title`                              |
+| `qr_type_select`   | Cambiar tipo (URL, Wi-Fi, Contacto, Email, SMS) | `tool: qr`, `qr_type`                                                   |
+| `upload_image`     | Subir logo al QR                                | `tool: qr`, `image_count: 1`, `asset: logo`                             |
+| `file_download`    | Descargar PNG o SVG                             | `tool: qr`, `file_name: esquinaqr.png|svg`, `file_extension`, `qr_type` |
+| `cross_tool_click` | Enlace del footer a Block o Cut                 | `from_tool: qr`, `to_tool: block|cut`, `link_url`                       |
+
+
+Para verlos en vivo: GA4 → **Informes → Tiempo real** (tarjeta de eventos por nombre).
 
 ## Pendiente
 
