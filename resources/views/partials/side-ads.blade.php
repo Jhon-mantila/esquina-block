@@ -4,7 +4,9 @@
             ? config('esquinacut.adsense')
             : (str_contains(request()->getBasePath(), 'esquinaqr')
                 ? config('esquinaqr.adsense')
-                : config('esquinablock.adsense'))
+                : (str_contains(request()->getBasePath(), 'esquinapdf')
+                    ? config('esquinapdf.adsense')
+                    : config('esquinablock.adsense')))
     );
     $sideSlots = array_filter([
         'left' => $adsense['slots']['side_left'] ?? null,

@@ -7,12 +7,12 @@
  *   php -S [::]:8000 -t .dev-root dev-router.php
  *   # o: npm run serve
  *
- * Sirve /esquinablock, /esquinacut y /esquinaqr como en producción (Alias Apache).
+ * Sirve /esquinablock, /esquinacut, /esquinaqr y /esquinapdf como en producción (Alias Apache).
  */
 
 $uri = urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '/');
 
-if ($uri === '/esquinablock' || $uri === '/esquinacut' || $uri === '/esquinaqr') {
+if ($uri === '/esquinablock' || $uri === '/esquinacut' || $uri === '/esquinaqr' || $uri === '/esquinapdf') {
     header('Location: '.$uri.'/', true, 301);
     exit;
 }
@@ -26,16 +26,17 @@ if ($uri === '/' || $uri === '') {
     echo '<li><a href="/esquinablock/">Esquina Block</a> — póster en varias hojas</li>';
     echo '<li><a href="/esquinacut/">Esquina Cut</a> — plantillas imprimibles con contornos de corte</li>';
     echo '<li><a href="/esquinaqr/">EsquinaQR</a> — generador de códigos QR</li>';
+    echo '<li><a href="/esquinapdf/">Esquina PDF</a> — unir, editar y convertir PDFs</li>';
     echo '</ul></body></html>';
 
     return true;
 }
 
-if (! preg_match('#^/(esquinablock|esquinacut|esquinaqr)(/.*)?$#', $uri, $matches)) {
+if (! preg_match('#^/(esquinablock|esquinacut|esquinaqr|esquinapdf)(/.*)?$#', $uri, $matches)) {
     http_response_code(404);
     header('Content-Type: text/html; charset=UTF-8');
     echo '<!DOCTYPE html><html lang="es"><body style="font-family:system-ui;margin:3rem">';
-    echo '<p>404. Prueba <a href="/esquinablock/">/esquinablock/</a>, <a href="/esquinacut/">/esquinacut/</a> o <a href="/esquinaqr/">/esquinaqr/</a>.</p>';
+    echo '<p>404. Prueba <a href="/esquinablock/">/esquinablock/</a>, <a href="/esquinacut/">/esquinacut/</a>, <a href="/esquinaqr/">/esquinaqr/</a> o <a href="/esquinapdf/">/esquinapdf/</a>.</p>';
     echo '</body></html>';
 
     return true;

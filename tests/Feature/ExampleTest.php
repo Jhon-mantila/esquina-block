@@ -64,6 +64,30 @@ class ExampleTest extends TestCase
         $this->assertStringContainsString('aria-label="Volver arriba"', $content);
     }
 
+    public function test_esquina_pdf_carga_correctamente(): void
+    {
+        $request = \Illuminate\Http\Request::create('http://localhost/esquinapdf/', 'GET', server: [
+            'SCRIPT_NAME' => '/esquinapdf/index.php',
+            'SCRIPT_FILENAME' => public_path('index.php'),
+        ]);
+
+        $response = $this->app->handle($request);
+
+        $this->assertSame(200, $response->getStatusCode());
+        $content = $response->getContent();
+        $this->assertStringContainsString('EsquinaPdf\\/Index', $content);
+        $this->assertStringContainsString('Esquina PDF', $content);
+        $this->assertStringContainsString('Une, divide, edita y añade texto', $content);
+        $this->assertStringContainsString('SoftwareApplication', $content);
+        $this->assertStringContainsString('FAQPage', $content);
+        $this->assertStringContainsString('¿Es gratis Esquina PDF?', $content);
+        $this->assertStringContainsString('aria-label="Volver arriba"', $content);
+        $this->assertStringContainsString('Unir PDFs', $content);
+        $this->assertStringContainsString('Eliminar páginas', $content);
+        $this->assertStringContainsString('Añadir texto', $content);
+        $this->assertStringContainsString('Convertir imágenes a PDF', $content);
+    }
+
     public function test_no_crea_cookies(): void
     {
         $this->get('/')->assertCookieMissing('esquinablock_session')->assertCookieMissing('XSRF-TOKEN');

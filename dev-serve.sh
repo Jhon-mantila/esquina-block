@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Servidor local (simula Alias Apache /esquinablock, /esquinacut y /esquinaqr).
+# Servidor local (simula Alias Apache /esquinablock, /esquinacut, /esquinaqr y /esquinapdf).
 # Escucha en IPv4 e IPv6 para que localhost funcione en Windows + Docker/WSL.
 set -euo pipefail
 cd "$(dirname "$0")"
@@ -8,6 +8,7 @@ mkdir -p .dev-root
 ln -sfn ../public .dev-root/esquinablock
 ln -sfn ../public .dev-root/esquinacut
 ln -sfn ../public .dev-root/esquinaqr
+ln -sfn ../public .dev-root/esquinapdf
 
 PORT="${PORT:-8000}"
 HOST="${HOST:-[::]}"
@@ -22,6 +23,7 @@ echo "Esquina local en el puerto ${PORT}"
 echo "  http://127.0.0.1:${PORT}/esquinablock/"
 echo "  http://127.0.0.1:${PORT}/esquinacut/"
 echo "  http://127.0.0.1:${PORT}/esquinaqr/"
+echo "  http://127.0.0.1:${PORT}/esquinapdf/"
 echo "  http://localhost:${PORT}/          (índice)"
 if [[ -n "${IP}" ]]; then
   echo "  (si localhost falla con Docker: http://${IP}:${PORT}/esquinablock/)"

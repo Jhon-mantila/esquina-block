@@ -31,6 +31,10 @@ class HandleInertiaRequests extends Middleware
             return 'esquinaqr';
         }
 
+        if (str_contains($base, 'esquinapdf')) {
+            return 'esquinapdf';
+        }
+
         return 'app';
     }
 
