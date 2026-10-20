@@ -24,6 +24,14 @@ return [
 
     'sibling_qr_label' => 'EsquinaQR — generador de códigos QR personalizados',
 
+    'sibling_img_url' => 'https://esquinaweb.com/esquinaimg/',
+
+    'sibling_img_label' => 'Esquina Img — comprime y convierte imágenes gratis',
+
+    'sibling_pdf_url' => 'https://esquinaweb.com/esquinapdf/',
+
+    'sibling_pdf_label' => 'Esquina PDF — une, edita y convierte PDFs gratis',
+
     'privacy_url' => 'https://esquinaweb.com/politica-de-privacidad/',
 
     'cookies_url' => 'https://esquinaweb.com/politica-de-cookies/',

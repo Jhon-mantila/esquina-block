@@ -22,6 +22,10 @@ return [
 
     'sibling_cut_url' => 'https://esquinaweb.com/esquinacut/',
 
+    'sibling_img_url' => 'https://esquinaweb.com/esquinaimg/',
+
+    'sibling_pdf_url' => 'https://esquinaweb.com/esquinapdf/',
+
     'privacy_url' => 'https://esquinaweb.com/politica-de-privacidad/',
 
     'cookies_url' => 'https://esquinaweb.com/politica-de-cookies/',

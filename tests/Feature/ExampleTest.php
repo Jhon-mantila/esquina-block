@@ -88,6 +88,34 @@ class ExampleTest extends TestCase
         $this->assertStringContainsString('Convertir imágenes a PDF', $content);
     }
 
+    public function test_esquina_img_carga_correctamente(): void
+    {
+        $request = \Illuminate\Http\Request::create('http://localhost/esquinaimg/', 'GET', server: [
+            'SCRIPT_NAME' => '/esquinaimg/index.php',
+            'SCRIPT_FILENAME' => public_path('index.php'),
+        ]);
+
+        $response = $this->app->handle($request);
+
+        $this->assertSame(200, $response->getStatusCode());
+        $content = $response->getContent();
+        $this->assertStringContainsString('EsquinaImg\\/Index', $content);
+        $this->assertStringContainsString('Esquina Img', $content);
+        $this->assertStringContainsString('Comprime y convierte imágenes', $content);
+        $this->assertStringContainsString('SoftwareApplication', $content);
+        $this->assertStringContainsString('FAQPage', $content);
+        $this->assertStringContainsString('¿Es gratis Esquina Img?', $content);
+        $this->assertStringContainsString('¿Qué formatos acepta?', $content);
+        $this->assertStringContainsString('Cómo funciona Esquina Img', $content);
+        $this->assertStringContainsString('preguntas-frecuentes', $content);
+        $this->assertStringContainsString('WebPage', $content);
+        $this->assertStringContainsString('twitter:title', $content);
+        $this->assertStringContainsString('aria-label="Volver arriba"', $content);
+        $this->assertStringContainsString('También prueba', $content);
+        $this->assertStringContainsString('Esquina PDF', $content);
+        $this->assertStringContainsString('esquinapdf', $content);
+    }
+
     public function test_no_crea_cookies(): void
     {
         $this->get('/')->assertCookieMissing('esquinablock_session')->assertCookieMissing('XSRF-TOKEN');

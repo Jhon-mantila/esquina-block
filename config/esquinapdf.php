@@ -24,6 +24,8 @@ return [
 
     'sibling_qr_url' => 'https://esquinaweb.com/esquinaqr/',
 
+    'sibling_img_url' => 'https://esquinaweb.com/esquinaimg/',
+
     'privacy_url' => 'https://esquinaweb.com/politica-de-privacidad/',
 
     'cookies_url' => 'https://esquinaweb.com/politica-de-cookies/',

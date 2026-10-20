@@ -16,12 +16,36 @@ function canTrack() {
 }
 
 /**
+ * Contexto de página en cada evento (para filtrar en GA4 por ruta / herramienta).
+ * @returns {Record<string, string>}
+ */
+function pageContext() {
+    const path = window.location.pathname || '';
+    let toolFromPath = '';
+    if (path.includes('/esquinacut')) toolFromPath = 'cut';
+    else if (path.includes('/esquinaqr')) toolFromPath = 'qr';
+    else if (path.includes('/esquinapdf')) toolFromPath = 'pdf';
+    else if (path.includes('/esquinablock')) toolFromPath = 'block';
+    else if (path.includes('/esquinaimg')) toolFromPath = 'img';
+
+    return {
+        page_path: path,
+        page_location: window.location.href,
+        page_title: document.title,
+        ...(toolFromPath ? { tool_page: toolFromPath } : {}),
+    };
+}
+
+/**
  * @param {string} eventName
  * @param {Record<string, unknown>} [params]
  */
 export function trackEvent(eventName, params = {}) {
     if (!canTrack()) return;
-    window.gtag('event', eventName, params);
+    window.gtag('event', eventName, {
+        ...pageContext(),
+        ...params,
+    });
 }
 
 /**
@@ -44,7 +68,7 @@ export function trackDescargarPdf(tool, fileName = '') {
 }
 
 /**
- * @param {'block'|'cut'|'pdf'} tool
+ * @param {'block'|'cut'|'pdf'|'img'} tool
  * @param {number} count
  */
 export function trackSubirImagen(tool, count = 1) {
@@ -55,8 +79,8 @@ export function trackSubirImagen(tool, count = 1) {
 }
 
 /**
- * @param {'block'|'cut'|'qr'|'pdf'} fromTool
- * @param {'block'|'cut'|'qr'|'pdf'} toTool
+ * @param {'block'|'cut'|'qr'|'pdf'|'img'} fromTool
+ * @param {'block'|'cut'|'qr'|'pdf'|'img'} toTool
  */
 export function trackCrossToolClick(fromTool, toTool) {
     trackEvent('cross_tool_click', {

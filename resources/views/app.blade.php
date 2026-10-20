@@ -212,6 +212,14 @@
                 Prueba <a href="{{ $seo['sibling_qr_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('block','qr')">{{ $seo['sibling_qr_label'] }}</a>.
             </p>
             <p class="mt-2">
+                ¿Quieres comprimir o convertir imágenes?
+                Prueba <a href="{{ $seo['sibling_img_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('block','img')">{{ $seo['sibling_img_label'] }}</a>.
+            </p>
+            <p class="mt-2">
+                ¿Necesitas unir o editar PDFs?
+                Prueba <a href="{{ $seo['sibling_pdf_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('block','pdf')">{{ $seo['sibling_pdf_label'] }}</a>.
+            </p>
+            <p class="mt-2">
                 ¿Buscas otras opciones? Lee nuestra <a href="{{ $seo['review_url'] }}" class="text-blue-700 hover:underline">reseña de Block Posters</a>.
             </p>
             <p class="mt-2">

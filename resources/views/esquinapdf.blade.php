@@ -165,10 +165,11 @@
             </p>
             <p class="mt-2">
                 También prueba
-                <a href="{{ $seo['sibling_block_url'] }}" class="text-blue-700 hover:underline">Esquina Block</a>,
-                <a href="{{ $seo['sibling_cut_url'] }}" class="text-blue-700 hover:underline">Esquina Cut</a>
+                <a href="{{ $seo['sibling_img_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('pdf','img')">Esquina Img</a>,
+                <a href="{{ $seo['sibling_block_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('pdf','block')">Esquina Block</a>,
+                <a href="{{ $seo['sibling_cut_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('pdf','cut')">Esquina Cut</a>
                 y
-                <a href="{{ $seo['sibling_qr_url'] }}" class="text-blue-700 hover:underline">EsquinaQR</a>.
+                <a href="{{ $seo['sibling_qr_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('pdf','qr')">EsquinaQR</a>.
             </p>
             <p class="mt-2">
                 <a href="{{ $seo['privacy_url'] }}" class="hover:text-blue-700 hover:underline">Política de privacidad</a>

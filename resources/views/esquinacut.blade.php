@@ -203,6 +203,14 @@
                 Prueba <a href="{{ $seo['sibling_qr_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('cut','qr')">{{ $seo['sibling_qr_label'] }}</a>.
             </p>
             <p class="mt-2">
+                ¿Quieres comprimir o convertir imágenes?
+                Prueba <a href="{{ $seo['sibling_img_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('cut','img')">{{ $seo['sibling_img_label'] }}</a>.
+            </p>
+            <p class="mt-2">
+                ¿Necesitas unir o editar PDFs?
+                Prueba <a href="{{ $seo['sibling_pdf_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('cut','pdf')">{{ $seo['sibling_pdf_label'] }}</a>.
+            </p>
+            <p class="mt-2">
                 <a href="{{ $seo['privacy_url'] }}" class="hover:text-blue-700 hover:underline">Política de privacidad</a>
                 <span aria-hidden="true">·</span>
                 <a href="{{ $seo['cookies_url'] }}" class="hover:text-blue-700 hover:underline">Política de cookies</a>
