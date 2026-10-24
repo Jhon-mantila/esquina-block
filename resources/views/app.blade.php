@@ -56,7 +56,7 @@
         <meta name="robots" content="index, follow, max-image-preview:large">
         <link rel="canonical" href="{{ $canonical }}">
         <meta name="theme-color" content="#2563eb">
-        <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
+        <link rel="icon" href="{{ asset('images/tools/esquinablock.svg') }}" type="image/svg+xml">
 
         <meta property="og:type" content="website">
         <meta property="og:locale" content="es_ES">
@@ -82,15 +82,9 @@
         @inertiaHead
     </head>
     <body class="bg-slate-50 font-sans text-slate-800 antialiased">
-        <header class="border-b border-slate-200 bg-white">
+        <header class="relative z-[100] border-b border-slate-200 bg-white">
             <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-                <a href="{{ $canonical }}" class="flex items-center gap-2 font-bold text-slate-900">
-                    <span class="grid h-8 w-8 grid-cols-2 gap-0.5 rounded-md bg-blue-600 p-1.5" aria-hidden="true">
-                        <span class="rounded-[2px] bg-white/90"></span><span class="rounded-[2px] bg-white/60"></span>
-                        <span class="rounded-[2px] bg-white/60"></span><span class="rounded-[2px] bg-white/90"></span>
-                    </span>
-                    Esquina Block
-                </a>
+                @include('partials.tools-menu', ['current' => 'block'])
                 <a href="https://esquinaweb.com" class="text-sm text-slate-500 hover:text-blue-700">esquinaweb.com</a>
             </div>
         </header>

@@ -60,7 +60,7 @@
         <meta name="robots" content="index, follow, max-image-preview:large">
         <link rel="canonical" href="{{ $canonical }}">
         <meta name="theme-color" content="#2563eb">
-        <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
+        <link rel="icon" href="{{ asset('images/tools/esquinacut.svg') }}" type="image/svg+xml">
 
         <meta property="og:type" content="website">
         <meta property="og:locale" content="es_ES">
@@ -84,12 +84,9 @@
         @inertiaHead
     </head>
     <body class="bg-slate-50 font-sans text-slate-800 antialiased">
-        <header class="border-b border-slate-200 bg-white">
+        <header class="relative z-[100] border-b border-slate-200 bg-white">
             <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-                <a href="{{ $canonical }}" class="flex items-center gap-2 font-bold text-slate-900">
-                    <span class="grid h-8 w-8 place-items-center rounded-md bg-blue-600 text-xs font-bold text-white" aria-hidden="true">EC</span>
-                    Esquina Cut
-                </a>
+                @include('partials.tools-menu', ['current' => 'cut'])
                 <a href="https://esquinaweb.com" class="text-sm text-slate-500 hover:text-blue-700">esquinaweb.com</a>
             </div>
         </header>
