@@ -181,10 +181,13 @@ function formatSize(bytes) {
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
+const INPUT_ACCEPT = 'image/jpeg,image/jpg,image/png,image/webp,image/avif,image/jfif,.jfif,.avif';
+const INPUT_FORMATS_HINT = 'JPG, PNG, WebP, AVIF o JFIF';
+
 function isAcceptedImage(file) {
     return (
-        ['image/jpeg', 'image/png', 'image/webp'].includes(file.type)
-        || /\.(jpe?g|png|webp)$/i.test(file.name)
+        ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/avif', 'image/jfif'].includes(file.type)
+        || /\.(jpe?g|jfif|png|webp|avif)$/i.test(file.name)
     );
 }
 
@@ -559,7 +562,7 @@ async function onSelectFiles(files) {
     error.value = '';
     const images = files.filter(isAcceptedImage);
     if (!images.length) {
-        error.value = 'Solo se aceptan JPG, PNG o WebP.';
+        error.value = 'Solo se aceptan JPG, PNG, WebP, AVIF o JFIF.';
         return;
     }
 
@@ -973,11 +976,13 @@ async function onDownloadAll() {
                     :count="items.length"
                     :max="MAX_FILES"
                     :disabled="busy || items.length >= MAX_FILES"
+                    :accept="INPUT_ACCEPT"
+                    :formats-hint="INPUT_FORMATS_HINT"
                     @select="onSelectFiles"
                 />
 
                 <p class="mt-2 text-xs text-slate-500">
-                    JPG, PNG o WebP · hasta {{ MAX_FILES }} · aviso si alguna supera 30 MB
+                    {{ INPUT_FORMATS_HINT }} · hasta {{ MAX_FILES }} · aviso si alguna supera 30 MB · salida JPG, PNG o WebP
                 </p>
 
                 <ul

@@ -5,6 +5,8 @@ defineProps({
     count: { type: Number, default: 0 },
     max: { type: Number, default: 60 },
     disabled: { type: Boolean, default: false },
+    accept: { type: String, default: 'image/jpeg,image/png,image/webp' },
+    formatsHint: { type: String, default: 'JPG, PNG o WebP' },
 });
 
 const emit = defineEmits(['select']);
@@ -52,14 +54,14 @@ function onDrop(event) {
             <span class="hidden sm:inline">Arrastra tus imágenes aquí o </span>
             <span class="text-blue-700 underline">elige archivos</span>
         </p>
-        <p class="mt-1 text-sm text-slate-500">JPG, PNG o WebP · máximo {{ max }} imágenes · 10 MB cada una</p>
+        <p class="mt-1 text-sm text-slate-500">{{ formatsHint }} · máximo {{ max }} imágenes</p>
         <p class="mt-1 text-sm font-medium text-slate-700">{{ count }} imágenes subidas (máximo {{ max }})</p>
         <p class="mt-3 text-xs text-slate-400">Tus imágenes no salen de tu dispositivo: todo se procesa en tu navegador.</p>
 
         <input
             ref="input"
             type="file"
-            accept="image/jpeg,image/png,image/webp"
+            :accept="accept"
             multiple
             class="hidden"
             :disabled="disabled"

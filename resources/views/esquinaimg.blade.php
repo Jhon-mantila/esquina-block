@@ -9,7 +9,7 @@
             [
                 '@type' => 'SoftwareApplication',
                 'name' => 'Esquina Img',
-                'description' => 'Comprime, convierte y redimensiona imágenes JPG, PNG o WebP en el navegador. Gratis y sin subir archivos.',
+                'description' => 'Comprime, convierte y redimensiona imágenes (JPG, PNG, WebP, AVIF, JFIF) en el navegador. Gratis y sin subir archivos.',
                 'url' => $canonical,
                 'applicationCategory' => 'UtilitiesApplication',
                 'operatingSystem' => 'Web',
@@ -135,7 +135,7 @@
                         <li class="rounded-2xl border border-slate-200 bg-white p-5">
                             <span class="grid h-8 w-8 place-items-center rounded-full bg-blue-600 font-semibold text-white">1</span>
                             <h3 class="mt-3 font-semibold text-slate-900">Sube tus imágenes</h3>
-                            <p class="mt-1 text-sm text-slate-600">JPG, PNG o WebP. Hasta 40 archivos. El proceso no sale de tu dispositivo.</p>
+                            <p class="mt-1 text-sm text-slate-600">JPG, PNG, WebP, AVIF o JFIF. Hasta 40 archivos. El proceso no sale de tu dispositivo.</p>
                         </li>
                         <li class="rounded-2xl border border-slate-200 bg-white p-5">
                             <span class="grid h-8 w-8 place-items-center rounded-full bg-blue-600 font-semibold text-white">2</span>

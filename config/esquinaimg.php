@@ -8,13 +8,13 @@ return [
 
     'title' => 'Esquina Img — Comprime y convierte imágenes gratis (JPG, PNG, WebP)',
 
-    'description' => 'Comprime imágenes, conviértelas a WebP o JPG y redimensiónalas en tu navegador. Sin subir archivos a ningún servidor. Gratis y en español.',
+    'description' => 'Comprime imágenes JPG, PNG, WebP, AVIF o JFIF, conviértelas a WebP o JPG y redimensiónalas en tu navegador. Sin subir archivos. Gratis y en español.',
 
-    'keywords' => 'comprimir imagen, convertir a webp, redimensionar imagen, comprimir jpg online, convertir png a webp, optimizador de imagen, reducir peso imagen, comprimir fotos gratis',
+    'keywords' => 'comprimir imagen, convertir a webp, convertir avif a jpg, redimensionar imagen, comprimir jpg online, convertir png a webp, optimizador de imagen, reducir peso imagen, comprimir fotos gratis',
 
     'og_title' => 'Esquina Img — Comprime y convierte imágenes gratis',
 
-    'og_description' => 'Comprime, convierte y redimensiona JPG, PNG o WebP en tu navegador. Sin subir archivos. Gratis.',
+    'og_description' => 'Sube JPG, PNG, WebP, AVIF o JFIF; exporta a JPG, PNG o WebP. Sin subir archivos. Gratis.',
 
     'og_image' => 'images/og-esquina-block.jpg',
 
@@ -52,7 +52,7 @@ return [
         ],
         [
             'q' => '¿Qué formatos acepta?',
-            'a' => 'Puedes subir JPG, PNG y WebP. Como salida eliges JPG, PNG o WebP, con control de calidad en JPG y WebP.',
+            'a' => 'Puedes subir JPG, PNG, WebP, AVIF y JFIF. Como salida eliges JPG, PNG o WebP, con control de calidad en JPG y WebP. AVIF requiere un navegador reciente.',
         ],
         [
             'q' => '¿Puedo redimensionar varias imágenes al mismo tamaño?',
