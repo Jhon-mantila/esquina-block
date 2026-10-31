@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+# Ejemplo de despliegue a VPS. Copia y ajusta:
+#   cp deploy.sh.example deploy.sh
+#   chmod +x deploy.sh
+#   # edita HOST / REMOTE_DIR / URLs de smoke test
+#   ./deploy.sh
+#
+# deploy.sh está en .gitignore (no subas IPs reales).
+#
+# Si la clave SSH pide passphrase:
+#   eval "$(ssh-agent -a /tmp/esquina-ssh.sock)"
+#   ssh-add ~/.ssh/id_ed25519
+#   export SSH_AUTH_SOCK=/tmp/esquina-ssh.sock
+#
+set -euo pipefail
+cd "$(dirname "$0")"
+
+# --- edita estos valores ---
+HOST="${DEPLOY_HOST:-root@203.0.113.10}"
+REMOTE_DIR="${DEPLOY_DIR:-/var/www/tu-proyecto}"
+SITE_ORIGIN="${DEPLOY_SITE:-https://ejemplo.com}"
+TOOLS=(esquinablock esquinacut esquinaqr esquinapdf esquinaimg)
+# ---------------------------
+
+SSH_OPTS=(-o BatchMode=yes -o ConnectTimeout=20)
+
+if [[ -S /tmp/esquina-ssh.sock ]]; then
+  export SSH_AUTH_SOCK=/tmp/esquina-ssh.sock
+fi
+
+echo "==> Comprobando SSH (${HOST})"
+if ! ssh "${SSH_OPTS[@]}" "$HOST" 'echo ok' >/dev/null; then
+  echo "No hay acceso SSH. Desbloquea la clave y reintenta:"
+  echo "  eval \"\$(ssh-agent -a /tmp/esquina-ssh.sock)\""
+  echo "  ssh-add ~/.ssh/id_ed25519"
+  echo "  export SSH_AUTH_SOCK=/tmp/esquina-ssh.sock"
+  echo "  ./deploy.sh"
+  exit 1
+fi
+
+if [[ -n "$(git status --porcelain)" ]]; then
+  echo "Hay cambios sin commit. Haz commit y push antes de desplegar."
+  git status -sb
+  exit 1
+fi
+
+BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+if [[ "$BRANCH" != "main" ]]; then
+  echo "Estás en '${BRANCH}'. Despliega desde main (o cambia DEPLOY_ALLOW_BRANCH)."
+  if [[ "${DEPLOY_ALLOW_BRANCH:-}" != "$BRANCH" ]]; then
+    exit 1
+  fi
+fi
+
+LOCAL_SHA="$(git rev-parse HEAD)"
+REMOTE_SHA="$(git rev-parse origin/main 2>/dev/null || true)"
+if [[ -n "$REMOTE_SHA" && "$LOCAL_SHA" != "$REMOTE_SHA" ]]; then
+  echo "Tu HEAD no coincide con origin/main. Haz: git push"
+  exit 1
+fi
+
+echo "==> npm run build"
+npm run build
+
+echo "==> rsync public/build → ${HOST}:${REMOTE_DIR}/public/build/"
+rsync -az --delete -e "ssh ${SSH_OPTS[*]}" public/build/ "${HOST}:${REMOTE_DIR}/public/build/"
+
+echo "==> Actualizando código y cachés en la VPS"
+ssh "${SSH_OPTS[@]}" "$HOST" bash -s <<REMOTE
+set -euo pipefail
+cd ${REMOTE_DIR}
+git fetch origin
+git reset --hard origin/main
+git log -1 --oneline
+
+COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --optimize-autoloader --no-interaction
+
+chown -R www-data:www-data storage bootstrap/cache
+sudo -u www-data php artisan optimize:clear
+sudo -u www-data php artisan config:cache
+sudo -u www-data php artisan view:cache
+sudo -u www-data php artisan event:cache
+# NO uses route:cache ni optimize (rompe subdirectorios → 405)
+
+apachectl configtest
+systemctl reload apache2
+echo APACHE_OK
+REMOTE
+
+echo "==> Smoke test"
+for path in "${TOOLS[@]}"; do
+  code="$(curl -sS -o /dev/null -w '%{http_code}' -L --max-time 20 "${SITE_ORIGIN}/${path}/" || echo ERR)"
+  echo "  /${path}/ → ${code}"
+done
+
+echo
+echo "Listo. Commit en VPS: ${LOCAL_SHA:0:7}"
+echo "  ${SITE_ORIGIN}/esquinablock/"

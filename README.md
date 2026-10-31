@@ -197,24 +197,26 @@ Con Apache 2.4.58 no hace falta `RewriteBase` en `public/.htaccess`: las rutas i
 
 ### Actualizar a una nueva versión
 
-En local, tras hacer `git push`:
+Hay un ejemplo en `deploy.sh.example` (IP y dominio ficticios). La copia real `deploy.sh` no se sube al repo (está en `.gitignore`).
 
 ```bash
-npm run build
-rsync -az --delete public/build/ usuario@tu-servidor:/var/www/esquina-block/public/build/
+cp deploy.sh.example deploy.sh
+chmod +x deploy.sh
+# Edita HOST, REMOTE_DIR y SITE_ORIGIN dentro de deploy.sh
 ```
 
-En el servidor:
+Luego, tras `git push` a `main`:
 
 ```bash
-cd /var/www/esquina-block
-git pull
-COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --optimize-autoloader
-sudo -u www-data php artisan optimize:clear
-sudo -u www-data php artisan config:cache
-sudo -u www-data php artisan view:cache
-sudo -u www-data php artisan event:cache
+# Si la clave pide passphrase (una vez por sesión):
+eval "$(ssh-agent -a /tmp/esquina-ssh.sock)"
+ssh-add ~/.ssh/id_ed25519
+export SSH_AUTH_SOCK=/tmp/esquina-ssh.sock
+
+./deploy.sh
 ```
+
+Eso compila el frontend, sube `public/build/`, hace `git reset --hard origin/main` en la VPS, recarga cachés de Laravel (**sin** `route:cache`) y reinicia Apache.
 
 ## AdSense
 
