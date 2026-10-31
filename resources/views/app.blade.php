@@ -130,6 +130,26 @@
                             <p class="mt-1 text-sm text-slate-600">Cada trozo va en una página numerada, con marcas de corte, lista para imprimir en casa.</p>
                         </li>
                     </ol>
+
+                    <div class="mt-8">
+                        <h3 class="text-lg font-semibold text-slate-900">Ver guía paso a paso</h3>
+                        <p class="mt-1 text-sm text-slate-600">Tutorial en vídeo de cómo usar Esquina Block de principio a fin.</p>
+                        {{-- aspect-ratio inline: el build de Vite aún no incluye aspect-video --}}
+                        <div
+                            class="relative mt-4 w-full overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 shadow-sm"
+                            style="aspect-ratio: 16 / 9"
+                        >
+                            <iframe
+                                class="absolute top-0 left-0 h-full w-full border-0"
+                                src="https://www.youtube-nocookie.com/embed/mNcydFj5Aog"
+                                title="Guía paso a paso de Esquina Block"
+                                loading="lazy"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin"
+                                allowfullscreen
+                            ></iframe>
+                        </div>
+                    </div>
                 </section>
 
                 <section id="armar-poster" aria-labelledby="armar-poster-titulo">
