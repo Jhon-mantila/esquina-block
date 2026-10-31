@@ -132,7 +132,7 @@
                     </ol>
 
                     <div class="mt-8">
-                        <h3 class="text-lg font-semibold text-slate-900">Ver guía paso a paso</h3>
+                        <h2 class="text-lg font-semibold text-slate-900">Ver guía paso a paso.</h2>
                         <p class="mt-1 text-sm text-slate-600">Tutorial en vídeo de cómo usar Esquina Block de principio a fin.</p>
                         {{-- aspect-ratio inline: el build de Vite aún no incluye aspect-video --}}
                         <div
