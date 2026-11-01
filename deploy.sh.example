@@ -21,6 +21,8 @@ HOST="${DEPLOY_HOST:-root@203.0.113.10}"
 REMOTE_DIR="${DEPLOY_DIR:-/var/www/tu-proyecto}"
 SITE_ORIGIN="${DEPLOY_SITE:-https://ejemplo.com}"
 TOOLS=(esquinablock esquinacut esquinaqr esquinapdf esquinaimg)
+# Opcional: smoke test del juego (dominio distinto)
+# GAMERS_ORIGIN="${DEPLOY_GAMERS:-https://esquinagamers.com}"
 # ---------------------------
 
 SSH_OPTS=(-o BatchMode=yes -o ConnectTimeout=20)
@@ -92,9 +94,14 @@ REMOTE
 echo "==> Smoke test"
 for path in "${TOOLS[@]}"; do
   code="$(curl -sS -o /dev/null -w '%{http_code}' -L --max-time 20 "${SITE_ORIGIN}/${path}/" || echo ERR)"
-  echo "  /${path}/ → ${code}"
+  echo "  ${SITE_ORIGIN}/${path}/ → ${code}"
 done
+if [[ -n "${GAMERS_ORIGIN:-}" ]]; then
+  code2048="$(curl -sS -o /dev/null -w '%{http_code}' -L --max-time 20 "${GAMERS_ORIGIN}/esquina2048/" || echo ERR)"
+  echo "  ${GAMERS_ORIGIN}/esquina2048/ → ${code2048}"
+fi
 
 echo
 echo "Listo. Commit en VPS: ${LOCAL_SHA:0:7}"
 echo "  ${SITE_ORIGIN}/esquinablock/"
+[[ -n "${GAMERS_ORIGIN:-}" ]] && echo "  ${GAMERS_ORIGIN}/esquina2048/"
