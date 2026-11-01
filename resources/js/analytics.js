@@ -1,5 +1,5 @@
 /**
- * GA4 (gtag.js) — tracking de Esquina Block / Cut / QR / PDF.
+ * GA4 (gtag.js) — tracking de Esquina Block / Cut / QR / PDF / Img / 2048.
  * Solo envía eventos si gtag existe. En localhost hace falta GA4_DEBUG=true.
  */
 import { router } from '@inertiajs/vue3';
@@ -27,6 +27,7 @@ function pageContext() {
     else if (path.includes('/esquinapdf')) toolFromPath = 'pdf';
     else if (path.includes('/esquinablock')) toolFromPath = 'block';
     else if (path.includes('/esquinaimg')) toolFromPath = 'img';
+    else if (path.includes('/esquina2048')) toolFromPath = '2048';
 
     return {
         page_path: path,
@@ -79,14 +80,82 @@ export function trackSubirImagen(tool, count = 1) {
 }
 
 /**
- * @param {'block'|'cut'|'qr'|'pdf'|'img'} fromTool
- * @param {'block'|'cut'|'qr'|'pdf'|'img'} toTool
+ * @param {'block'|'cut'|'qr'|'pdf'|'img'|'2048'} fromTool
+ * @param {'block'|'cut'|'qr'|'pdf'|'img'|'2048'} toTool
  */
 export function trackCrossToolClick(fromTool, toTool) {
     trackEvent('cross_tool_click', {
         from_tool: fromTool,
         to_tool: toTool,
         link_url: window.location.href,
+    });
+}
+
+/**
+ * @param {'classic'|'large'|'expert'|string} mode
+ * @param {'dark'|'colorful'|string} theme
+ */
+export function track2048Start(mode, theme) {
+    trackEvent('game_start', {
+        tool: '2048',
+        game_mode: mode,
+        game_theme: theme,
+    });
+}
+
+/**
+ * @param {'classic'|'large'|'expert'|string} mode
+ * @param {number} score
+ * @param {boolean} [isNewBest=false]
+ */
+export function track2048GameOver(mode, score, isNewBest = false) {
+    trackEvent('game_over', {
+        tool: '2048',
+        game_mode: mode,
+        score: Number(score) || 0,
+        is_new_best: isNewBest ? 1 : 0,
+    });
+}
+
+/**
+ * @param {'classic'|'large'|'expert'|string} mode
+ * @param {number} score
+ */
+export function track2048Win(mode, score) {
+    trackEvent('game_win', {
+        tool: '2048',
+        game_mode: mode,
+        score: Number(score) || 0,
+    });
+}
+
+/**
+ * @param {'classic'|'large'|'expert'|string} mode
+ */
+export function track2048Restart(mode) {
+    trackEvent('game_restart', {
+        tool: '2048',
+        game_mode: mode,
+    });
+}
+
+/**
+ * @param {'classic'|'large'|'expert'|string} mode
+ */
+export function track2048ModeChange(mode) {
+    trackEvent('game_mode_change', {
+        tool: '2048',
+        game_mode: mode,
+    });
+}
+
+/**
+ * @param {'dark'|'colorful'|string} theme
+ */
+export function track2048ThemeChange(theme) {
+    trackEvent('game_theme_change', {
+        tool: '2048',
+        game_theme: theme,
     });
 }
 

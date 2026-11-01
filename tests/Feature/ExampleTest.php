@@ -116,6 +116,23 @@ class ExampleTest extends TestCase
         $this->assertStringContainsString('esquinapdf', $content);
     }
 
+    public function test_esquina_2048_carga_correctamente(): void
+    {
+        $request = \Illuminate\Http\Request::create('http://localhost/esquina2048/', 'GET', server: [
+            'SCRIPT_NAME' => '/esquina2048/index.php',
+            'SCRIPT_FILENAME' => public_path('index.php'),
+        ]);
+
+        $response = $this->app->handle($request);
+
+        $this->assertSame(200, $response->getStatusCode());
+        $content = $response->getContent();
+        $this->assertStringContainsString('Juegos\\/Esquina2048', $content);
+        $this->assertStringContainsString('Esquina 2048', $content);
+        $this->assertStringContainsString('esquinagamers.com', $content);
+        $this->assertStringContainsString('content="#070b16"', $content);
+    }
+
     public function test_no_crea_cookies(): void
     {
         $this->get('/')->assertCookieMissing('esquinablock_session')->assertCookieMissing('XSRF-TOKEN');

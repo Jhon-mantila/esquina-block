@@ -1,5 +1,6 @@
 @php
-    $ga4Id = config('services.ga4.measurement_id');
+    // Permite override por página (ej. EsquinaGamers vs EsquinaWeb).
+    $ga4Id = $ga4Id ?? config('services.ga4.measurement_id');
     $ga4Debug = (bool) config('services.ga4.debug');
     $ga4Ready = $ga4Id && $ga4Id !== 'G-XXXXXXXXXX';
 @endphp
