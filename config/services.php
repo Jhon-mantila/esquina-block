@@ -39,7 +39,7 @@ return [
         // EsquinaWeb (herramientas)
         'measurement_id' => env('GA4_MEASUREMENT_ID', 'G-XXXXXXXXXX'),
         // EsquinaGamers (juegos: /esquina2048, etc.)
-        'gamers_measurement_id' => env('GA4_GAMERS_MEASUREMENT_ID', 'G-RWDJ1CQTZ0'),
+        'gamers_measurement_id' => env('GA4_GAMERS_MEASUREMENT_ID', 'G-XXXXXXXXXX'),
         // Solo local: fuerza carga de gtag aunque no sea production.
         'debug' => (bool) env('GA4_DEBUG', false),
     ],
