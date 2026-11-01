@@ -209,6 +209,7 @@ Luego, tras `git push` a `main`:
 
 ```bash
 # Si la clave pide passphrase (una vez por sesión):
+rm -f /tmp/esquina-ssh.sock
 eval "$(ssh-agent -a /tmp/esquina-ssh.sock)"
 ssh-add ~/.ssh/id_ed25519
 export SSH_AUTH_SOCK=/tmp/esquina-ssh.sock

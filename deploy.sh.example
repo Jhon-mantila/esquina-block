@@ -8,6 +8,7 @@
 # deploy.sh está en .gitignore (no subas IPs reales).
 #
 # Si la clave SSH pide passphrase:
+#   rm -f /tmp/esquina-ssh.sock
 #   eval "$(ssh-agent -a /tmp/esquina-ssh.sock)"
 #   ssh-add ~/.ssh/id_ed25519
 #   export SSH_AUTH_SOCK=/tmp/esquina-ssh.sock
@@ -31,6 +32,7 @@ fi
 echo "==> Comprobando SSH (${HOST})"
 if ! ssh "${SSH_OPTS[@]}" "$HOST" 'echo ok' >/dev/null; then
   echo "No hay acceso SSH. Desbloquea la clave y reintenta:"
+  echo "  rm -f /tmp/esquina-ssh.sock"
   echo "  eval \"\$(ssh-agent -a /tmp/esquina-ssh.sock)\""
   echo "  ssh-add ~/.ssh/id_ed25519"
   echo "  export SSH_AUTH_SOCK=/tmp/esquina-ssh.sock"
