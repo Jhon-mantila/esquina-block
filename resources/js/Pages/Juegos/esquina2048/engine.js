@@ -231,7 +231,7 @@ export function hasWon(grid, target = 2048) {
 }
 
 /**
- * @param {{ mode?: string, grid?: number[][], score?: number, won?: boolean, over?: boolean } | null} snapshot
+ * @param {{ mode?: string, grid?: number[][], score?: number, won?: boolean, over?: boolean, winDismissed?: boolean } | null} snapshot
  * @param {string} mode
  * @returns {boolean}
  */
@@ -252,13 +252,14 @@ function applySnapshot(match, snapshot, mode) {
     match.score = Number.isFinite(snapshot.score) && snapshot.score >= 0 ? snapshot.score : 0;
     match.won = snapshot.won === true || hasWon(match.grid);
     match.over = snapshot.over === true || !hasMoves(match.grid);
+    match.winDismissed = snapshot.winDismissed === true;
     return true;
 }
 
 /**
  * Estado mutable del partido (usado por BoardScene).
  * @param {string} [mode='classic']
- * @param {{ mode?: string, grid?: number[][], score?: number, won?: boolean, over?: boolean } | null} [snapshot]
+ * @param {{ mode?: string, grid?: number[][], score?: number, won?: boolean, over?: boolean, winDismissed?: boolean } | null} [snapshot]
  */
 export function createMatch(mode = 'classic', snapshot = null) {
     const size = MODE_SIZE[mode] ?? 4;
@@ -273,6 +274,8 @@ export function createMatch(mode = 'classic', snapshot = null) {
         score: 0,
         won: false,
         over: false,
+        /** true = el jugador ya cerró el aviso de 2048 y sigue jugando */
+        winDismissed: false,
 
         /**
          * @param {'left'|'right'|'up'|'down'} dir
@@ -316,7 +319,7 @@ export function createMatch(mode = 'classic', snapshot = null) {
 
         /**
          * @param {string} [nextMode]
-         * @param {{ mode?: string, grid?: number[][], score?: number, won?: boolean, over?: boolean } | null} [nextSnapshot]
+         * @param {{ mode?: string, grid?: number[][], score?: number, won?: boolean, over?: boolean, winDismissed?: boolean } | null} [nextSnapshot]
          */
         reset(nextMode = this.mode, nextSnapshot = null) {
             const modeId = nextMode || this.mode;
@@ -331,6 +334,13 @@ export function createMatch(mode = 'classic', snapshot = null) {
             this.score = 0;
             this.won = false;
             this.over = false;
+            this.winDismissed = false;
+        },
+
+        dismissWin() {
+            if (!this.won || this.over) return false;
+            this.winDismissed = true;
+            return true;
         },
 
         toJSON() {
@@ -340,6 +350,7 @@ export function createMatch(mode = 'classic', snapshot = null) {
                 score: this.score,
                 won: this.won,
                 over: this.over,
+                winDismissed: this.winDismissed,
             };
         },
     };

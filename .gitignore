@@ -24,3 +24,4 @@ Homestead.json
 Homestead.yaml
 Thumbs.db
 /.dev-root
+scripts/fix-2048-vps.sh

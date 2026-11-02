@@ -224,12 +224,13 @@ function flashGain(gained) {
     }, 700);
 }
 
-/** @param {number | { score: number, gained?: number, won?: boolean, over?: boolean }} payload */
+/** @param {number | { score: number, gained?: number, won?: boolean, over?: boolean, winDismissed?: boolean }} payload */
 function onPhaserScore(payload) {
     const nextScore = typeof payload === 'number' ? payload : Number(payload?.score) || 0;
     const gained = typeof payload === 'number' ? 0 : Number(payload?.gained) || 0;
     const over = typeof payload === 'object' && payload?.over === true;
     const won = typeof payload === 'object' && payload?.won === true;
+    const winDismissed = typeof payload === 'object' && payload?.winDismissed === true;
 
     score.value = nextScore;
     applyBest(nextScore);
@@ -241,9 +242,9 @@ function onPhaserScore(payload) {
         }
         status.value = 'over';
         triggerGameOverSound();
-    } else if (won && status.value !== 'over') {
+    } else if (won && !winDismissed && status.value !== 'over') {
         status.value = 'won';
-    } else if (!won && !over) {
+    } else if (!over) {
         status.value = 'playing';
     }
 }
@@ -267,7 +268,7 @@ function onPhaserGameOver(payload) {
     track2048GameOver(mode.value, Number.isFinite(nextScore) ? nextScore : score.value, isNewBest.value);
 }
 
-/** @param {{ score?: number, won?: boolean, over?: boolean, restored?: boolean } | undefined} payload */
+/** @param {{ score?: number, won?: boolean, over?: boolean, winDismissed?: boolean, restored?: boolean } | undefined} payload */
 function onPhaserReady(payload) {
     phaserReady.value = true;
     if (!payload || typeof payload !== 'object') return;
@@ -279,7 +280,7 @@ function onPhaserReady(payload) {
     }
 
     if (payload.over) status.value = 'over';
-    else if (payload.won) status.value = 'won';
+    else if (payload.won && !payload.winDismissed) status.value = 'won';
     else status.value = 'playing';
 
     // Al restaurar, no marcar "nuevo récord" solo por cargar la partida.
@@ -287,6 +288,12 @@ function onPhaserReady(payload) {
         isNewBest.value = false;
         roundBestStart.value = bestScore.value;
     }
+}
+
+function onContinueAfterWin() {
+    if (status.value !== 'won') return;
+    status.value = 'playing';
+    bridge?.gameEvents.emit(bridge.EVENTS.DISMISS_WIN);
 }
 
 async function ensureBridge() {
@@ -524,9 +531,19 @@ watch(showGameOverAd, async (show) => {
                 >
                     <p class="text-base font-bold">¡Llegaste a 2048!</p>
                     <p class="mt-1 text-sm opacity-90">
-                        Puedes seguir sumando o empezar otra partida.
+                        Puedes seguir sumando para fichas más altas.
                         <span v-if="isNewBest"> También hay récord nuevo en este modo.</span>
                     </p>
+                    <button
+                        type="button"
+                        class="mt-4 w-full rounded-xl px-4 py-3 text-sm font-semibold transition"
+                        :class="isDark
+                            ? 'bg-cyan-400 text-slate-950 hover:bg-cyan-300'
+                            : 'bg-orange-500 text-white hover:bg-orange-600'"
+                        @click="onContinueAfterWin"
+                    >
+                        Continuar jugando
+                    </button>
                 </div>
 
                 <div

@@ -1,7 +1,7 @@
 import { MODE_SIZE } from './engine';
 import { STORAGE } from './gameEvents';
 
-const DRAFT_VERSION = 1;
+const DRAFT_VERSION = 2;
 
 /**
  * @param {string} mode
@@ -13,12 +13,13 @@ export function draftKey(mode) {
 /**
  * @param {unknown} data
  * @param {string} mode
- * @returns {null | { mode: string, grid: number[][], score: number, won: boolean, over: boolean }}
+ * @returns {null | { mode: string, grid: number[][], score: number, won: boolean, over: boolean, winDismissed: boolean }}
  */
 export function normalizeDraft(data, mode) {
     if (!data || typeof data !== 'object') return null;
     const d = /** @type {Record<string, unknown>} */ (data);
-    if (d.v !== DRAFT_VERSION) return null;
+    // Acepta v1 (sin winDismissed) y v2
+    if (d.v !== 1 && d.v !== DRAFT_VERSION) return null;
     if (d.mode !== mode) return null;
 
     const size = MODE_SIZE[mode];
@@ -36,12 +37,17 @@ export function normalizeDraft(data, mode) {
     }
 
     const score = Number(d.score);
+    const won = d.won === true;
+    // Partidas viejas con victoria ya mostrada: no volver a bloquear con el aviso
+    const winDismissed = d.winDismissed === true || (d.v === 1 && won && d.over !== true);
+
     return {
         mode,
         grid,
         score: Number.isFinite(score) && score >= 0 ? score : 0,
-        won: d.won === true,
+        won,
         over: d.over === true,
+        winDismissed,
     };
 }
 
@@ -59,7 +65,7 @@ export function loadDraft(mode) {
 }
 
 /**
- * @param {{ mode: string, grid: number[][], score: number, won: boolean, over: boolean }} match
+ * @param {{ mode: string, grid: number[][], score: number, won: boolean, over: boolean, winDismissed?: boolean }} match
  */
 export function saveDraft(match) {
     if (!match?.mode || !Array.isArray(match.grid)) return;
@@ -73,6 +79,7 @@ export function saveDraft(match) {
                 score: match.score,
                 won: !!match.won,
                 over: !!match.over,
+                winDismissed: !!match.winDismissed,
                 savedAt: Date.now(),
             }),
         );

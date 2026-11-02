@@ -1,7 +1,7 @@
 /**
  * Puente Vue ↔ Phaser (sin importar Phaser aquí, para code-split).
  *
- * Vue → Phaser: RESTART, SET_MODE, SET_THEME
+ * Vue → Phaser: RESTART, SET_MODE, SET_THEME, DISMISS_WIN
  * Phaser → Vue: READY, SCORE, BEST, WIN, GAME_OVER
  */
 function createEmitter() {
@@ -54,6 +54,7 @@ export const EVENTS = {
     RESTART: 'restart',
     SET_MODE: 'setMode',
     SET_THEME: 'setTheme',
+    DISMISS_WIN: 'dismissWin',
 };
 
 /** Claves de preferencias / récord / partida en localStorage */

@@ -81,6 +81,7 @@ export default class BoardScene extends Phaser.Scene {
             score: this.match.score,
             won: this.match.won,
             over: this.match.over,
+            winDismissed: !!this.match.winDismissed,
             restored: !!draft,
         });
 
@@ -93,6 +94,7 @@ export default class BoardScene extends Phaser.Scene {
         gameEvents.on(EVENTS.RESTART, this.handleRestart, this);
         gameEvents.on(EVENTS.SET_MODE, this.handleSetMode, this);
         gameEvents.on(EVENTS.SET_THEME, this.handleSetTheme, this);
+        gameEvents.on(EVENTS.DISMISS_WIN, this.handleDismissWin, this);
 
         this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
             this.animToken += 1;
@@ -105,6 +107,7 @@ export default class BoardScene extends Phaser.Scene {
             gameEvents.off(EVENTS.RESTART, this.handleRestart, this);
             gameEvents.off(EVENTS.SET_MODE, this.handleSetMode, this);
             gameEvents.off(EVENTS.SET_THEME, this.handleSetTheme, this);
+            gameEvents.off(EVENTS.DISMISS_WIN, this.handleDismissWin, this);
         });
     }
 
@@ -466,6 +469,7 @@ export default class BoardScene extends Phaser.Scene {
             gained,
             won: this.match.won,
             over: this.match.over,
+            winDismissed: !!this.match.winDismissed,
             mode: this.modeId,
         });
     }
@@ -474,6 +478,14 @@ export default class BoardScene extends Phaser.Scene {
         this.animToken += 1;
         this.tweens.killAll();
         this.inputLocked = false;
+    }
+
+    handleDismissWin() {
+        if (!this.match?.dismissWin()) return;
+        this.hideOverlay();
+        this.persistMatch();
+        this.emitScore(0);
+        this.drawStatus();
     }
 
     handleRestart() {
@@ -508,6 +520,7 @@ export default class BoardScene extends Phaser.Scene {
             score: this.match?.score ?? 0,
             won: !!this.match?.won,
             over: !!this.match?.over,
+            winDismissed: !!this.match?.winDismissed,
             restored: !!draft,
         });
     }
@@ -600,7 +613,7 @@ export default class BoardScene extends Phaser.Scene {
         const subtitle = this.overlay.getData('subtitle');
 
         const showOver = this.match.over;
-        const showWin = this.match.won && !this.match.over;
+        const showWin = this.match.won && !this.match.over && !this.match.winDismissed;
 
         if (!showOver && !showWin) {
             this.overlay.setVisible(false);
@@ -635,7 +648,9 @@ export default class BoardScene extends Phaser.Scene {
         subtitle.setFontSize(Math.max(13, Math.floor(titleSize * 0.42)));
         subtitle.setColor(T.overlaySub);
         subtitle.setText(
-            showOver ? 'Mira el marcador abajo · Reinicia para otra ronda' : 'Puedes seguir jugando',
+            showOver
+                ? 'Mira el marcador abajo · Reinicia para otra ronda'
+                : 'Pulsa Continuar abajo para seguir',
         );
         subtitle.setPosition(cx, cy + titleSize * 0.55);
 
