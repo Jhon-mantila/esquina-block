@@ -39,6 +39,10 @@ class HandleInertiaRequests extends Middleware
             return 'esquinaimg';
         }
 
+        if (str_contains($base, 'esquinabg')) {
+            return 'esquinabg';
+        }
+
         if (str_contains($base, 'esquina2048')) {
             return 'esquina2048';
         }

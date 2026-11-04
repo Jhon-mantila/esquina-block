@@ -1,5 +1,5 @@
 /**
- * GA4 (gtag.js) — tracking de Esquina Block / Cut / QR / PDF / Img / 2048.
+ * GA4 (gtag.js) — tracking de Esquina Block / Cut / QR / PDF / Img / BG / 2048.
  * Solo envía eventos si gtag existe. En localhost hace falta GA4_DEBUG=true.
  */
 import { router } from '@inertiajs/vue3';
@@ -27,6 +27,7 @@ function pageContext() {
     else if (path.includes('/esquinapdf')) toolFromPath = 'pdf';
     else if (path.includes('/esquinablock')) toolFromPath = 'block';
     else if (path.includes('/esquinaimg')) toolFromPath = 'img';
+    else if (path.includes('/esquinabg')) toolFromPath = 'bg';
     else if (path.includes('/esquina2048')) toolFromPath = '2048';
 
     return {
@@ -69,7 +70,7 @@ export function trackDescargarPdf(tool, fileName = '') {
 }
 
 /**
- * @param {'block'|'cut'|'pdf'|'img'} tool
+ * @param {'block'|'cut'|'pdf'|'img'|'bg'} tool
  * @param {number} count
  */
 export function trackSubirImagen(tool, count = 1) {
@@ -80,8 +81,8 @@ export function trackSubirImagen(tool, count = 1) {
 }
 
 /**
- * @param {'block'|'cut'|'qr'|'pdf'|'img'|'2048'} fromTool
- * @param {'block'|'cut'|'qr'|'pdf'|'img'|'2048'} toTool
+ * @param {'block'|'cut'|'qr'|'pdf'|'img'|'bg'|'2048'} fromTool
+ * @param {'block'|'cut'|'qr'|'pdf'|'img'|'bg'|'2048'} toTool
  */
 export function trackCrossToolClick(fromTool, toTool) {
     trackEvent('cross_tool_click', {

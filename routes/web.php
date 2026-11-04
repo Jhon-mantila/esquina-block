@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EsquinaBGController;
 use App\Http\Controllers\EsquinaBlockController;
 use App\Http\Controllers\EsquinaCutController;
 use App\Http\Controllers\EsquinaImgController;
@@ -10,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 
 /*
 | Apache (y el symlink local .dev-root) montan la misma carpeta public/ en
-| /esquinablock, /esquinacut, /esquinaqr, /esquinapdf, /esquinaimg y /esquina2048.
+| /esquinablock, /esquinacut, /esquinaqr, /esquinapdf, /esquinaimg, /esquinabg y /esquina2048.
 | Laravel ve la ruta como "/" ; la herramienta se elige por base path.
 |
 | En esquinagamers.com también se expone /esquina2048 por dominio (producción).
@@ -38,6 +39,10 @@ Route::get('/', function () {
 
     if (str_contains($base, 'esquinaimg')) {
         return app(EsquinaImgController::class)->index();
+    }
+
+    if (str_contains($base, 'esquinabg')) {
+        return app(EsquinaBGController::class)->index();
     }
 
     if (str_contains($base, 'esquina2048')) {

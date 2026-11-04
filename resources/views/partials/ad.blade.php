@@ -8,7 +8,9 @@
                     ? config('esquinapdf.adsense')
                     : (str_contains(request()->getBasePath(), 'esquinaimg')
                         ? config('esquinaimg.adsense')
-                        : config('esquinablock.adsense'))))
+                        : (str_contains(request()->getBasePath(), 'esquinabg')
+                            ? config('esquinabg.adsense')
+                            : config('esquinablock.adsense')))))
     );
     $adSlot = $adsense['slots'][$position] ?? null;
 @endphp

@@ -236,9 +236,9 @@ Además hay bloques manuales que solo aparecen si se configura su ID de bloque e
 
 Los laterales son verticales (160 × 600, o 300 × 600 desde 1800 px de ancho) y solo se crean en pantallas de al menos 1536 × 800 px, donde caben en el hueco a los lados del contenido sin taparlo.
 
-Los mismos bloques y el mismo script se usan en **Esquina Cut** (`/esquinacut`) y **EsquinaQR** (`/esquinaqr`).
+Los mismos bloques y el mismo script se usan en **Esquina Cut**, **EsquinaQR**, **Esquina PDF**, **Esquina Img** y **Esquina BG** (`/esquinabg`).
 
-Los formatos de superposición (pantalla completa, laterales y anclado) vienen de los anuncios automáticos. En el panel de AdSense, conviene excluir la zona superior de `/esquinablock`, `/esquinacut` y `/esquinaqr` para que no aparezca un banner encima del título.
+Los formatos de superposición (pantalla completa, laterales y anclado) vienen de los anuncios automáticos. En el panel de AdSense, conviene excluir la zona superior de las herramientas (`/esquinablock`, `/esquinacut`, `/esquinaqr`, `/esquinapdf`, `/esquinaimg`, `/esquinabg`) para que no aparezca un banner encima del título.
 
 Para desactivar AdSense en producción: `ADSENSE_ENABLED=false`. Tras cambiar el `.env`, ejecutar `php artisan config:cache`.
 
@@ -282,6 +282,18 @@ En todas las herramientas se dispara `page_view` al cargar y en cada navegación
 | `upload_image`     | Subir logo al QR                                | `tool: qr`, `image_count: 1`, `asset: logo`                             |
 | `file_download`    | Descargar PNG o SVG                             | `tool: qr`, `file_name: esquinaqr.png|svg`, `file_extension`, `qr_type` |
 | `cross_tool_click` | Enlace del footer a Block o Cut                 | `from_tool: qr`, `to_tool: block|cut`, `link_url`                       |
+
+
+### Esquina BG (`/esquinabg`)
+
+
+| Evento GA4         | Cuándo                         | Parámetros                                                              |
+| ------------------ | ------------------------------ | ----------------------------------------------------------------------- |
+| `page_view`        | Carga / navegación             | `page_path`, `page_location`, `page_title`, `tool_page: bg`             |
+| `upload_image`     | Subir o soltar imagen          | `tool: bg`, `image_count: 1`                                            |
+| `process_image`    | Quitar fondo con éxito         | `tool: bg`, `model`, `image_width`, `image_height`                      |
+| `file_download`    | Descargar PNG transparente     | `tool: bg`, `file_name`, `file_extension: png`                          |
+| `cross_tool_click` | Enlace del footer a otra tool  | `from_tool: bg`, `to_tool`, `link_url`                                  |
 
 
 Para verlos en vivo: GA4 → **Informes → Tiempo real** (tarjeta de eventos por nombre).

@@ -1,0 +1,17 @@
+<svg viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xml:space="preserve">
+  <rect width="48" height="48" rx="7" fill="#006bfb"/>
+  <!-- damero (fondo transparente) -->
+  <g opacity="0.35">
+    <rect x="8" y="8" width="8" height="8" fill="#ffffff"/>
+    <rect x="24" y="8" width="8" height="8" fill="#ffffff"/>
+    <rect x="16" y="16" width="8" height="8" fill="#ffffff"/>
+    <rect x="32" y="16" width="8" height="8" fill="#ffffff"/>
+    <rect x="8" y="24" width="8" height="8" fill="#ffffff"/>
+    <rect x="24" y="24" width="8" height="8" fill="#ffffff"/>
+    <rect x="16" y="32" width="8" height="8" fill="#ffffff"/>
+    <rect x="32" y="32" width="8" height="8" fill="#ffffff"/>
+  </g>
+  <!-- silueta -->
+  <circle cx="24" cy="18" r="6" fill="#ffffff"/>
+  <path d="M12 38c2.5-8 9-12 12-12s9.5 4 12 12" fill="#ffffff"/>
+</svg>

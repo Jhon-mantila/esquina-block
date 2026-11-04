@@ -1,7 +1,7 @@
 @php
     /**
      * Menú de herramientas EsquinaWeb.
-     * @var string $current  block|cut|qr|img|pdf
+     * @var string $current  block|cut|qr|img|pdf|bg
      */
     $current = $current ?? 'block';
 
@@ -61,6 +61,13 @@
             'hint' => 'Editar PDFs',
             'url' => $origin.'/esquinapdf/',
             'file' => 'esquinapdf.svg',
+        ],
+        [
+            'id' => 'bg',
+            'name' => 'Esquina BG',
+            'hint' => 'Quitar fondo',
+            'url' => $origin.'/esquinabg/',
+            'file' => 'esquinabg.svg',
         ],
     ];
 

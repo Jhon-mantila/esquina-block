@@ -26,6 +26,19 @@ export default defineConfig({
             'ziggy-js': path.resolve('vendor/tightenco/ziggy'),
         },
     },
+    optimizeDeps: {
+        exclude: ['onnxruntime-web'],
+    },
+    // IIFE: worker autocontenido (sin imports bare) → funciona bajo Alias /esquinabg
+    worker: {
+        format: 'es',
+        rollupOptions: {
+            output: {
+                inlineDynamicImports: true,
+            },
+        },
+    },
+    assetsInclude: ['**/*.wasm'],
     server: {
         watch: {
             ignored: ['**/storage/framework/views/**'],

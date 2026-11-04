@@ -116,6 +116,28 @@ class ExampleTest extends TestCase
         $this->assertStringContainsString('esquinapdf', $content);
     }
 
+    public function test_esquina_bg_carga_correctamente(): void
+    {
+        $request = \Illuminate\Http\Request::create('http://localhost/esquinabg/', 'GET', server: [
+            'SCRIPT_NAME' => '/esquinabg/index.php',
+            'SCRIPT_FILENAME' => public_path('index.php'),
+        ]);
+
+        $response = $this->app->handle($request);
+
+        $this->assertSame(200, $response->getStatusCode());
+        $content = $response->getContent();
+        $this->assertStringContainsString('EsquinaBG\\/Index', $content);
+        $this->assertStringContainsString('Esquina BG', $content);
+        $this->assertStringContainsString('Quitar fondo', $content);
+        $this->assertStringContainsString('SoftwareApplication', $content);
+        $this->assertStringContainsString('FAQPage', $content);
+        $this->assertStringContainsString('¿Es gratis Esquina BG?', $content);
+        $this->assertStringContainsString('Cómo funciona Esquina BG', $content);
+        $this->assertStringContainsString('preguntas-frecuentes', $content);
+        $this->assertStringContainsString('esquinabg', $content);
+    }
+
     public function test_esquina_2048_carga_correctamente(): void
     {
         $request = \Illuminate\Http\Request::create('http://localhost/esquina2048/', 'GET', server: [
@@ -209,6 +231,33 @@ class ExampleTest extends TestCase
         $this->assertStringContainsString('data-ad-slot="5555555555"', $content);
         $this->assertStringContainsString('data-ad-slot="6666666666"', $content);
         $this->assertStringContainsString('7777777777', $content);
+    }
+
+    public function test_adsense_y_ga4_en_esquina_bg(): void
+    {
+        config([
+            'services.ga4.measurement_id' => 'G-TESTBG1234',
+            'services.ga4.debug' => true,
+            'esquinabg.adsense.enabled' => true,
+            'esquinabg.adsense.slots.after_tool' => '8888888888',
+            'esquinabg.adsense.slots.before_faq' => '9999999999',
+            'esquinabg.adsense.slots.side_left' => '1010101010',
+        ]);
+
+        $request = \Illuminate\Http\Request::create('http://localhost/esquinabg/', 'GET', server: [
+            'SCRIPT_NAME' => '/esquinabg/index.php',
+            'SCRIPT_FILENAME' => public_path('index.php'),
+        ]);
+
+        $response = $this->app->handle($request);
+        $content = $response->getContent();
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertStringContainsString('googletagmanager.com/gtag/js?id=G-TESTBG1234', $content);
+        $this->assertStringContainsString('adsbygoogle.js?client=ca-pub-1852556021136727', $content);
+        $this->assertStringContainsString('data-ad-slot="8888888888"', $content);
+        $this->assertStringContainsString('data-ad-slot="9999999999"', $content);
+        $this->assertStringContainsString('1010101010', $content);
     }
 
     public function test_anuncios_laterales_con_bloques_configurados(): void

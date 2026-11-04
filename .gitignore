@@ -17,6 +17,7 @@
 /public/build
 /public/hot
 /public/storage
+/public/models/esquinabg/*.onnx
 /storage/*.key
 /storage/pail
 /vendor

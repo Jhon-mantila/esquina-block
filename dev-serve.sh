@@ -10,6 +10,7 @@ ln -sfn ../public .dev-root/esquinacut
 ln -sfn ../public .dev-root/esquinaqr
 ln -sfn ../public .dev-root/esquinapdf
 ln -sfn ../public .dev-root/esquinaimg
+ln -sfn ../public .dev-root/esquinabg
 ln -sfn ../public .dev-root/esquina2048
 
 PORT="${PORT:-8000}"
@@ -27,6 +28,7 @@ echo "  http://127.0.0.1:${PORT}/esquinacut/"
 echo "  http://127.0.0.1:${PORT}/esquinaqr/"
 echo "  http://127.0.0.1:${PORT}/esquinapdf/"
 echo "  http://127.0.0.1:${PORT}/esquinaimg/"
+echo "  http://127.0.0.1:${PORT}/esquinabg/"
 echo "  http://127.0.0.1:${PORT}/esquina2048/"
 echo "  http://localhost:${PORT}/          (índice)"
 if [[ -n "${IP}" ]]; then
