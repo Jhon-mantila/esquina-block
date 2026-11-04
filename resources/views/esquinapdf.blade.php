@@ -162,6 +162,7 @@
             </p>
             <p class="mt-2">
                 También prueba
+                <a href="{{ $seo['sibling_bg_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('pdf','bg')">Esquina BG</a>,
                 <a href="{{ $seo['sibling_img_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('pdf','img')">Esquina Img</a>,
                 <a href="{{ $seo['sibling_block_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('pdf','block')">Esquina Block</a>,
                 <a href="{{ $seo['sibling_cut_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('pdf','cut')">Esquina Cut</a>

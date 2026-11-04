@@ -234,6 +234,10 @@
                 Prueba <a href="{{ $seo['sibling_pdf_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('block','pdf')">{{ $seo['sibling_pdf_label'] }}</a>.
             </p>
             <p class="mt-2">
+                ¿Quieres quitar el fondo de una foto?
+                Prueba <a href="{{ $seo['sibling_bg_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('block','bg')">{{ $seo['sibling_bg_label'] }}</a>.
+            </p>
+            <p class="mt-2">
                 ¿Buscas otras opciones? Lee nuestra <a href="{{ $seo['review_url'] }}" class="text-blue-700 hover:underline">reseña de Block Posters</a>.
             </p>
             <p class="mt-2">

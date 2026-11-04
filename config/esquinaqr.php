@@ -26,6 +26,8 @@ return [
 
     'sibling_pdf_url' => 'https://esquinaweb.com/esquinapdf/',
 
+    'sibling_bg_url' => 'https://esquinaweb.com/esquinabg/',
+
     'privacy_url' => 'https://esquinaweb.com/politica-de-privacidad/',
 
     'cookies_url' => 'https://esquinaweb.com/politica-de-cookies/',

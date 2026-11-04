@@ -36,6 +36,10 @@ return [
 
     'sibling_pdf_label' => 'Esquina PDF — une, edita y convierte PDFs gratis',
 
+    'sibling_bg_url' => 'https://esquinaweb.com/esquinabg/',
+
+    'sibling_bg_label' => 'Esquina BG — quitar fondo de imágenes gratis',
+
     'privacy_url' => 'https://esquinaweb.com/politica-de-privacidad/',
 
     'cookies_url' => 'https://esquinaweb.com/politica-de-cookies/',
