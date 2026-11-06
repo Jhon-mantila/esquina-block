@@ -34,7 +34,7 @@ const MODEL_OPTIONS = [
     {
         id: /** @type {ModelId} */ ('high'),
         label: 'Alta Calidad (Detallado)',
-        hint: 'Más precisión en pelo y bordes finos.',
+        hint: 'Más precisión en cabello y bordes finos.',
     },
 ];
 
@@ -465,11 +465,6 @@ onBeforeUnmount(() => {
             >
                 <p class="text-sm text-slate-600">
                     Elige la calidad. Las opciones que tu equipo no soporta quedan deshabilitadas.
-                </p>
-                <p class="mt-2 text-xs text-slate-500">
-                    Detectado:
-                    <template v-if="device.ramGb != null">~{{ device.ramGb }} GB RAM (máx. reportado por el navegador) · </template>
-                    {{ device.cores }} núcleos · modo por defecto: {{ selectedModelLabel }}
                 </p>
 
                 <fieldset class="mt-4 space-y-3">
