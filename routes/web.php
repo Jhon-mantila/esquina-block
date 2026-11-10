@@ -11,15 +11,19 @@ use Illuminate\Support\Facades\Route;
 
 /*
 | Apache (y el symlink local .dev-root) montan la misma carpeta public/ en
-| /esquinablock, /esquinacut, /esquinaqr, /esquinapdf, /esquinaimg, /esquinabg y /esquina2048.
+| /esquinablock, /esquinacut, /esquinaqr, /esquinapdf, /esquinaimg, /esquinabg,
+| /esquina2048 y /esquinablocks.
 | Laravel ve la ruta como "/" ; la herramienta se elige por base path.
 |
-| En esquinagamers.com también se expone /esquina2048 por dominio (producción).
+| En esquinagamers.com también se exponen /esquina2048 y /esquinablocks (producción).
 */
 
 Route::domain('esquinagamers.com')->group(function () {
     Route::get('/esquina2048', [JuegoController::class, 'esquina2048'])->name('juego.2048');
     Route::redirect('/esquina2048/', '/esquina2048', 301);
+
+    Route::get('/esquinablocks', [JuegoController::class, 'esquinaBlocks'])->name('juego.blocks');
+    Route::redirect('/esquinablocks/', '/esquinablocks', 301);
 });
 
 Route::get('/', function () {
@@ -43,6 +47,11 @@ Route::get('/', function () {
 
     if (str_contains($base, 'esquinabg')) {
         return app(EsquinaBGController::class)->index();
+    }
+
+    // Más específico antes que esquina2048 / esquinablock
+    if (str_contains($base, 'esquinablocks')) {
+        return app(JuegoController::class)->esquinaBlocks();
     }
 
     if (str_contains($base, 'esquina2048')) {

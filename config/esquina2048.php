@@ -16,6 +16,8 @@ return [
 
     'tools_url' => 'https://esquinaweb.com',
 
+    'sibling_blocks_url' => 'https://esquinagamers.com/esquinablocks/',
+
     'sibling_block_url' => 'https://esquinaweb.com/esquinablock/',
 
     'sibling_cut_url' => 'https://esquinaweb.com/esquinacut/',

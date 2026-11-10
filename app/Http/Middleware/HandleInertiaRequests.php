@@ -43,14 +43,22 @@ class HandleInertiaRequests extends Middleware
             return 'esquinabg';
         }
 
+        if (str_contains($base, 'esquinablocks')) {
+            return 'esquinablocks';
+        }
+
         if (str_contains($base, 'esquina2048')) {
             return 'esquina2048';
         }
 
-        // Dominio esquinagamers.com/esquina2048 (path real, sin Alias)
-        if (str_contains($request->getHost(), 'esquinagamers.com')
-            && str_starts_with($request->getPathInfo(), '/esquina2048')) {
-            return 'esquina2048';
+        // Dominio esquinagamers.com (path real, sin Alias)
+        if (str_contains($request->getHost(), 'esquinagamers.com')) {
+            if (str_starts_with($request->getPathInfo(), '/esquinablocks')) {
+                return 'esquinablocks';
+            }
+            if (str_starts_with($request->getPathInfo(), '/esquina2048')) {
+                return 'esquina2048';
+            }
         }
 
         return 'app';

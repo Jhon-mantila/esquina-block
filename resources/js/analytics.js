@@ -1,5 +1,5 @@
 /**
- * GA4 (gtag.js) — tracking de Esquina Block / Cut / QR / PDF / Img / BG / 2048.
+ * GA4 (gtag.js) — tracking de Esquina Block / Cut / QR / PDF / Img / BG / 2048 / Blocks.
  * Solo envía eventos si gtag existe. En localhost hace falta GA4_DEBUG=true.
  */
 import { router } from '@inertiajs/vue3';
@@ -25,6 +25,7 @@ function pageContext() {
     if (path.includes('/esquinacut')) toolFromPath = 'cut';
     else if (path.includes('/esquinaqr')) toolFromPath = 'qr';
     else if (path.includes('/esquinapdf')) toolFromPath = 'pdf';
+    else if (path.includes('/esquinablocks')) toolFromPath = 'blocks';
     else if (path.includes('/esquinablock')) toolFromPath = 'block';
     else if (path.includes('/esquinaimg')) toolFromPath = 'img';
     else if (path.includes('/esquinabg')) toolFromPath = 'bg';
@@ -81,8 +82,8 @@ export function trackSubirImagen(tool, count = 1) {
 }
 
 /**
- * @param {'block'|'cut'|'qr'|'pdf'|'img'|'bg'|'2048'} fromTool
- * @param {'block'|'cut'|'qr'|'pdf'|'img'|'bg'|'2048'} toTool
+ * @param {'block'|'cut'|'qr'|'pdf'|'img'|'bg'|'2048'|'blocks'} fromTool
+ * @param {'block'|'cut'|'qr'|'pdf'|'img'|'bg'|'2048'|'blocks'} toTool
  */
 export function trackCrossToolClick(fromTool, toTool) {
     trackEvent('cross_tool_click', {
@@ -156,6 +157,44 @@ export function track2048ModeChange(mode) {
 export function track2048ThemeChange(theme) {
     trackEvent('game_theme_change', {
         tool: '2048',
+        game_theme: theme,
+    });
+}
+
+/**
+ * @param {'dark'|'colorful'|string} theme
+ */
+export function trackBlocksStart(theme) {
+    trackEvent('game_start', {
+        tool: 'blocks',
+        game_theme: theme,
+    });
+}
+
+/**
+ * @param {number} score
+ * @param {boolean} [isNewBest=false]
+ */
+export function trackBlocksGameOver(score, isNewBest = false) {
+    trackEvent('game_over', {
+        tool: 'blocks',
+        score: Number(score) || 0,
+        is_new_best: isNewBest ? 1 : 0,
+    });
+}
+
+export function trackBlocksRestart() {
+    trackEvent('game_restart', {
+        tool: 'blocks',
+    });
+}
+
+/**
+ * @param {'dark'|'colorful'|string} theme
+ */
+export function trackBlocksThemeChange(theme) {
+    trackEvent('game_theme_change', {
+        tool: 'blocks',
         game_theme: theme,
     });
 }

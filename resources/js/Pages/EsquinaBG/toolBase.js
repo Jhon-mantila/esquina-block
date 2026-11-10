@@ -4,7 +4,7 @@
  */
 export function getToolBase(pathname = typeof window !== 'undefined' ? window.location.pathname : '') {
     const match = pathname.match(
-        /^\/(esquinablock|esquinacut|esquinaqr|esquinapdf|esquinaimg|esquinabg|esquina2048)(?=\/|$)/,
+        /^\/(esquinablock|esquinacut|esquinaqr|esquinapdf|esquinaimg|esquinabg|esquina2048|esquinablocks)(?=\/|$)/,
     );
     return match ? match[0] : '';
 }

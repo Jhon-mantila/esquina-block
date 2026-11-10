@@ -1,25 +1,28 @@
 @php
+    $isGamersGame = str_contains(request()->getBasePath(), 'esquina2048')
+        || str_contains(request()->getPathInfo(), '/esquina2048')
+        || str_contains(request()->getBasePath(), 'esquinablocks')
+        || str_contains(request()->getPathInfo(), '/esquinablocks');
+
     $adsense = $adsense ?? (
-        str_contains(request()->getBasePath(), 'esquina2048') || str_contains(request()->getPathInfo(), '/esquina2048')
-            ? config('esquina2048.adsense')
-            : (str_contains(request()->getBasePath(), 'esquinacut')
-                ? config('esquinacut.adsense')
-                : (str_contains(request()->getBasePath(), 'esquinaqr')
-                    ? config('esquinaqr.adsense')
-                    : (str_contains(request()->getBasePath(), 'esquinapdf')
-                        ? config('esquinapdf.adsense')
-                        : (str_contains(request()->getBasePath(), 'esquinaimg')
-                            ? config('esquinaimg.adsense')
-                            : (str_contains(request()->getBasePath(), 'esquinabg')
-                                ? config('esquinabg.adsense')
-                                : config('esquinablock.adsense'))))))
+        str_contains(request()->getBasePath(), 'esquinablocks') || str_contains(request()->getPathInfo(), '/esquinablocks')
+            ? config('esquinablocks.adsense')
+            : (str_contains(request()->getBasePath(), 'esquina2048') || str_contains(request()->getPathInfo(), '/esquina2048')
+                ? config('esquina2048.adsense')
+                : (str_contains(request()->getBasePath(), 'esquinacut')
+                    ? config('esquinacut.adsense')
+                    : (str_contains(request()->getBasePath(), 'esquinaqr')
+                        ? config('esquinaqr.adsense')
+                        : (str_contains(request()->getBasePath(), 'esquinapdf')
+                            ? config('esquinapdf.adsense')
+                            : (str_contains(request()->getBasePath(), 'esquinaimg')
+                                ? config('esquinaimg.adsense')
+                                : (str_contains(request()->getBasePath(), 'esquinabg')
+                                    ? config('esquinabg.adsense')
+                                    : config('esquinablock.adsense')))))))
     );
     // max-w-6xl = 72rem (herramientas); max-w-3xl = 48rem (juegos EsquinaGamers)
-    $contentMaxRem = $contentMaxRem ?? (
-        (str_contains(request()->getBasePath(), 'esquina2048') || str_contains(request()->getPathInfo(), '/esquina2048'))
-            ? 48
-            : 72
-    );
+    $contentMaxRem = $contentMaxRem ?? ($isGamersGame ? 48 : 72);
     $sideSlots = array_filter([
         'left' => $adsense['slots']['side_left'] ?? null,
         'right' => $adsense['slots']['side_right'] ?? null,

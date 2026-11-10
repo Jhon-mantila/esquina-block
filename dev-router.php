@@ -8,12 +8,12 @@
  *   # o: npm run serve
  *
  * Sirve /esquinablock, /esquinacut, /esquinaqr, /esquinapdf, /esquinaimg,
- * /esquinabg y /esquina2048 como en producción (Alias Apache).
+ * /esquinabg, /esquina2048 y /esquinablocks como en producción (Alias Apache).
  */
 
 $uri = urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '/');
 
-$tools = ['esquinablock', 'esquinacut', 'esquinaqr', 'esquinapdf', 'esquinaimg', 'esquinabg', 'esquina2048'];
+$tools = ['esquinablock', 'esquinacut', 'esquinaqr', 'esquinapdf', 'esquinaimg', 'esquinabg', 'esquina2048', 'esquinablocks'];
 
 if (in_array($uri, array_map(fn ($t) => '/'.$t, $tools), true)) {
     header('Location: '.$uri.'/', true, 301);
@@ -33,6 +33,7 @@ if ($uri === '/' || $uri === '') {
     echo '<li><a href="/esquinaimg/">Esquina Img</a> — comprimir y convertir imágenes</li>';
     echo '<li><a href="/esquinabg/">Esquina BG</a> — quitar fondo de imágenes</li>';
     echo '<li><a href="/esquina2048/">Esquina 2048</a> — juego 2048</li>';
+    echo '<li><a href="/esquinablocks/">Esquina Blocks</a> — puzzle de bloques</li>';
     echo '</ul></body></html>';
 
     return true;
@@ -43,7 +44,7 @@ if (! preg_match($pattern, $uri, $matches)) {
     http_response_code(404);
     header('Content-Type: text/html; charset=UTF-8');
     echo '<!DOCTYPE html><html lang="es"><body style="font-family:system-ui;margin:3rem">';
-    echo '<p>404. Prueba <a href="/esquinablock/">/esquinablock/</a>, <a href="/esquinacut/">/esquinacut/</a>, <a href="/esquinaqr/">/esquinaqr/</a>, <a href="/esquinapdf/">/esquinapdf/</a>, <a href="/esquinaimg/">/esquinaimg/</a>, <a href="/esquinabg/">/esquinabg/</a> o <a href="/esquina2048/">/esquina2048/</a>.</p>';
+    echo '<p>404. Prueba <a href="/esquinablock/">/esquinablock/</a>, <a href="/esquinacut/">/esquinacut/</a>, <a href="/esquinaqr/">/esquinaqr/</a>, <a href="/esquinapdf/">/esquinapdf/</a>, <a href="/esquinaimg/">/esquinaimg/</a>, <a href="/esquinabg/">/esquinabg/</a>, <a href="/esquina2048/">/esquina2048/</a> o <a href="/esquinablocks/">/esquinablocks/</a>.</p>';
     echo '</body></html>';
 
     return true;

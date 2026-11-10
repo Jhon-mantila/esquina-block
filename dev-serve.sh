@@ -12,6 +12,7 @@ ln -sfn ../public .dev-root/esquinapdf
 ln -sfn ../public .dev-root/esquinaimg
 ln -sfn ../public .dev-root/esquinabg
 ln -sfn ../public .dev-root/esquina2048
+ln -sfn ../public .dev-root/esquinablocks
 
 PORT="${PORT:-8000}"
 HOST="${HOST:-[::]}"
@@ -30,6 +31,7 @@ echo "  http://127.0.0.1:${PORT}/esquinapdf/"
 echo "  http://127.0.0.1:${PORT}/esquinaimg/"
 echo "  http://127.0.0.1:${PORT}/esquinabg/"
 echo "  http://127.0.0.1:${PORT}/esquina2048/"
+echo "  http://127.0.0.1:${PORT}/esquinablocks/"
 echo "  http://localhost:${PORT}/          (índice)"
 if [[ -n "${IP}" ]]; then
   echo "  (si localhost falla con Docker: http://${IP}:${PORT}/esquinablock/)"

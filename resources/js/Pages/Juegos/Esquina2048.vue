@@ -18,6 +18,7 @@ const props = defineProps({
     siblings: {
         type: Object,
         default: () => ({
+            blocks: 'https://esquinagamers.com/esquinablocks/',
             block: 'https://esquinaweb.com/esquinablock/',
             cut: 'https://esquinaweb.com/esquinacut/',
             qr: 'https://esquinaweb.com/esquinaqr/',
@@ -56,12 +57,13 @@ const THEMES = [
 ];
 
 const SIBLING_LINKS = computed(() => [
+    { id: 'blocks', label: 'Esquina Blocks', href: props.siblings.blocks },
     { id: 'block', label: 'Esquina Block', href: props.siblings.block },
     { id: 'cut', label: 'Esquina Cut', href: props.siblings.cut },
     { id: 'qr', label: 'Esquina QR', href: props.siblings.qr },
     { id: 'img', label: 'Esquina Img', href: props.siblings.img },
     { id: 'pdf', label: 'Esquina PDF', href: props.siblings.pdf },
-]);
+].filter((l) => !!l.href));
 
 const gameHost = ref(null);
 /** @type {import('vue').Ref<import('phaser').Game | null>} */
