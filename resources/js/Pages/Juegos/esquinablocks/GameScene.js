@@ -90,7 +90,7 @@ export default class GameScene extends Phaser.Scene {
             this.grid = createEmptyGrid();
             this.score = 0;
             this.gameOver = false;
-            this.tray = dealTray(TRAY_SLOTS, this.theme.blocks.length);
+            this.tray = dealTray(TRAY_SLOTS, this.theme.blocks.length, this.grid);
             clearDraft();
         }
 
@@ -603,7 +603,7 @@ export default class GameScene extends Phaser.Scene {
 
     refillTrayIfNeeded() {
         if (this.tray.every((p) => !p)) {
-            this.tray = dealTray(TRAY_SLOTS, this.theme.blocks.length);
+            this.tray = dealTray(TRAY_SLOTS, this.theme.blocks.length, this.grid);
         }
     }
 
