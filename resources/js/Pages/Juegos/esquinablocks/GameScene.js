@@ -52,15 +52,40 @@ export default class GameScene extends Phaser.Scene {
         this.gameOver = false;
         this.inputLocked = false;
         this.restored = false;
-        /** @type {null | { slot: number, piece: import('./pieces').PieceDef, pointerId: number }} */
+        /** @type {null | {
+         *   slot: number,
+         *   piece: import('./pieces').PieceDef,
+         *   pointerId: number,
+         *   bounds: { w: number, h: number, cells: [number, number][] },
+         *   unit: number,
+         *   block: number,
+         *   lift: number,
+         * }} */
         this.drag = null;
+        /** @type {Phaser.GameObjects.Container | null} */
+        this.dragContainer = null;
         this.hoverAnchor = null;
         this.hoverValid = false;
+        this.lastHoverKey = '';
     }
 
     init(data = {}) {
         this.applyTheme(data.theme);
-        this.resetMatch(false, true);
+        try {
+            this.resetMatch(false, true);
+        } catch (err) {
+            console.error('[EsquinaBlocks] resetMatch falló, partida nueva', err);
+            try {
+                clearDraft();
+            } catch {
+                /* ignore */
+            }
+            this.grid = createEmptyGrid();
+            this.score = 0;
+            this.gameOver = false;
+            this.tray = dealTray(TRAY_SLOTS, this.theme.blocks.length, null);
+            this.restored = false;
+        }
     }
 
     applyTheme(id) {
@@ -148,7 +173,11 @@ export default class GameScene extends Phaser.Scene {
             this.slotZones.push(zone);
         }
 
-        this.redrawAll();
+        try {
+            this.redrawAll();
+        } catch (err) {
+            console.error('[EsquinaBlocks] redraw inicial falló', err);
+        }
 
         this.scale.on('resize', this.onResize, this);
         this.input.on('pointermove', this.onPointerMove, this);
@@ -159,6 +188,7 @@ export default class GameScene extends Phaser.Scene {
         gameEvents.on(EVENTS.SET_THEME, this.handleSetTheme, this);
 
         this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+            this.destroyDragContainer();
             this.scale.off('resize', this.onResize, this);
             this.input.off('pointermove', this.onPointerMove, this);
             this.input.off('pointerup', this.onPointerUp, this);
@@ -167,6 +197,7 @@ export default class GameScene extends Phaser.Scene {
             gameEvents.off(EVENTS.SET_THEME, this.handleSetTheme, this);
         });
 
+        // Siempre avisar a Vue, aunque el primer paint falle.
         gameEvents.emit(EVENTS.READY, {
             theme: this.themeId,
             score: this.score,
@@ -219,7 +250,16 @@ export default class GameScene extends Phaser.Scene {
         this.drawTray();
         this.layoutSlotZones();
         this.drawGhost();
-        this.drawDragPiece();
+        // La ficha en arrastre vive en dragContainer (no Graphics).
+        if (this.drag && this.dragContainer && this.cellMetrics) {
+            const m = this.cellMetrics;
+            this.drag.unit = m.cell + m.gap;
+            this.drag.block = m.cell;
+            this.drag.lift = m.cell * 0.45;
+            const pointer = this.input.activePointer;
+            const origin = this.dragOriginFromPointer(pointer.x, pointer.y);
+            this.dragContainer.setPosition(origin.x, origin.y);
+        }
     }
 
     layoutSlotZones() {
@@ -350,45 +390,62 @@ export default class GameScene extends Phaser.Scene {
         const fill = this.hoverValid
             ? this.theme.blocks[(piece.colorIndex - 1) % this.theme.blocks.length]
             : 0xf43f5e;
-        const alpha = this.hoverValid ? 0.45 : 0.35;
+        const alpha = this.hoverValid ? 0.42 : 0.32;
 
+        // fillRect (sin stroke/rounded) = mucho más barato en cada cambio de celda.
         for (const [dx, dy] of piece.cells) {
             const col = this.hoverAnchor.col + dx;
             const row = this.hoverAnchor.row + dy;
             if (col < 0 || row < 0 || col >= GRID_SIZE || row >= GRID_SIZE) continue;
             const { x, y } = cellTopLeft(m, col, row);
             g.fillStyle(fill, alpha);
-            g.lineStyle(2, this.hoverValid ? 0xffffff : 0xfeF2f2, this.hoverValid ? 0.5 : 0.35);
-            g.fillRoundedRect(x, y, m.cell, m.cell, m.radius);
-            g.strokeRoundedRect(x, y, m.cell, m.cell, m.radius);
+            g.fillRect(x, y, m.cell, m.cell);
         }
     }
 
-    drawDragPiece() {
-        const g = this.dragGfx;
-        const m = this.cellMetrics;
-        if (!g) return;
-        g.clear();
-        if (!this.drag || !m) return;
-
-        const piece = this.drag.piece;
-        const pointer = this.input.activePointer;
+    /**
+     * Pieza arrastrada como Container de rectángulos: solo se mueve, no se redibuja.
+     * @param {import('./pieces').PieceDef} piece
+     * @param {number} originX
+     * @param {number} originY
+     * @param {number} unit
+     * @param {number} block
+     */
+    spawnDragContainer(piece, originX, originY, unit, block) {
+        this.destroyDragContainer();
         const fill = this.theme.blocks[(piece.colorIndex - 1) % this.theme.blocks.length];
-        const unit = m.cell + m.gap;
-        const block = m.cell;
-        const radius = m.radius;
-        const bounds = pieceBounds(piece);
-        const originX = pointer.x - (bounds.w * unit - m.gap) / 2;
-        const originY = pointer.y - (bounds.h * unit - m.gap) / 2 - m.cell * 0.35;
-
+        const container = this.add.container(originX, originY).setDepth(10);
         for (const [cx, cy] of piece.cells) {
-            const x = originX + cx * unit;
-            const y = originY + cy * unit;
-            g.fillStyle(fill, 0.95);
-            g.lineStyle(2, 0xffffff, 0.35);
-            g.fillRoundedRect(x, y, block, block, radius);
-            g.strokeRoundedRect(x, y, block, block, radius);
+            const rect = this.add
+                .rectangle(cx * unit, cy * unit, block, block, fill, 0.96)
+                .setOrigin(0, 0)
+                .setStrokeStyle(1.5, 0xffffff, 0.3);
+            container.add(rect);
         }
+        this.dragContainer = container;
+    }
+
+    destroyDragContainer() {
+        if (this.dragContainer) {
+            this.dragContainer.destroy(true);
+            this.dragContainer = null;
+        }
+        this.dragGfx?.clear();
+    }
+
+    /**
+     * @param {number} pointerX
+     * @param {number} pointerY
+     */
+    dragOriginFromPointer(pointerX, pointerY) {
+        const drag = this.drag;
+        const m = this.cellMetrics;
+        if (!drag || !m) return { x: pointerX, y: pointerY };
+        const { bounds, unit, lift } = drag;
+        return {
+            x: pointerX - (bounds.w * unit - m.gap) / 2,
+            y: pointerY - (bounds.h * unit - m.gap) / 2 - lift,
+        };
     }
 
     /**
@@ -398,21 +455,39 @@ export default class GameScene extends Phaser.Scene {
     onSlotDown(slot, pointer) {
         if (this.gameOver || this.inputLocked || this.drag) return;
         const piece = this.tray[slot];
-        if (!piece) return;
-        this.drag = { slot, piece, pointerId: pointer.id };
+        const m = this.cellMetrics;
+        if (!piece || !m) return;
+
+        const bounds = pieceBounds(piece);
+        const unit = m.cell + m.gap;
+        const block = m.cell;
+        const lift = m.cell * 0.45;
+        this.drag = {
+            slot,
+            piece,
+            pointerId: pointer.id,
+            bounds,
+            unit,
+            block,
+            lift,
+        };
         this.hoverAnchor = null;
         this.hoverValid = false;
+        this.lastHoverKey = '';
         this.layoutSlotZones();
         this.drawTray();
+
+        const origin = this.dragOriginFromPointer(pointer.x, pointer.y);
+        this.spawnDragContainer(piece, origin.x, origin.y, unit, block);
         this.updateHover(pointer);
-        this.drawDragPiece();
     }
 
     /** @param {Phaser.Input.Pointer} pointer */
     onPointerMove(pointer) {
         if (!this.drag || pointer.id !== this.drag.pointerId) return;
+        const origin = this.dragOriginFromPointer(pointer.x, pointer.y);
+        this.dragContainer?.setPosition(origin.x, origin.y);
         this.updateHover(pointer);
-        this.drawDragPiece();
     }
 
     /** @param {Phaser.Input.Pointer} pointer */
@@ -425,8 +500,9 @@ export default class GameScene extends Phaser.Scene {
         this.drag = null;
         this.hoverAnchor = null;
         this.hoverValid = false;
+        this.lastHoverKey = '';
         this.ghostGfx?.clear();
-        this.dragGfx?.clear();
+        this.destroyDragContainer();
 
         if (valid && anchor) {
             this.commitPlacement(slot, piece, anchor.col, anchor.row);
@@ -439,24 +515,27 @@ export default class GameScene extends Phaser.Scene {
     /** @param {Phaser.Input.Pointer} pointer */
     updateHover(pointer) {
         const m = this.cellMetrics;
-        if (!m || !this.drag) return;
+        const drag = this.drag;
+        if (!m || !drag) return;
 
-        const bounds = pieceBounds(this.drag.piece);
-        const unit = m.cell + m.gap;
-        const originX = pointer.x - (bounds.w * unit - m.gap) / 2;
-        const originY = pointer.y - (bounds.h * unit - m.gap) / 2 - m.cell * 0.35;
-        // Ancla = celda bajo el bloque (0,0) de la pieza
-        const anchorScreenX = originX + m.cell / 2;
-        const anchorScreenY = originY + m.cell / 2;
+        const origin = this.dragOriginFromPointer(pointer.x, pointer.y);
+        const anchorScreenX = origin.x + m.cell / 2;
+        const anchorScreenY = origin.y + m.cell / 2;
         const { col, row } = screenToCell(m, anchorScreenX, anchorScreenY);
 
-        if (col < -3 || row < -3 || col >= GRID_SIZE + 3 || row >= GRID_SIZE + 3) {
-            this.hoverAnchor = null;
-            this.hoverValid = false;
-        } else {
-            this.hoverAnchor = { col, row };
-            this.hoverValid = canPlace(this.grid, this.drag.piece, col, row);
+        /** @type {{ col: number, row: number } | null} */
+        let nextAnchor = null;
+        let nextValid = false;
+        if (!(col < -3 || row < -3 || col >= GRID_SIZE + 3 || row >= GRID_SIZE + 3)) {
+            nextAnchor = { col, row };
+            nextValid = canPlace(this.grid, drag.piece, col, row);
         }
+
+        const key = nextAnchor ? `${nextAnchor.col},${nextAnchor.row},${nextValid ? 1 : 0}` : 'none';
+        if (key === this.lastHoverKey) return;
+        this.lastHoverKey = key;
+        this.hoverAnchor = nextAnchor;
+        this.hoverValid = nextValid;
         this.drawGhost();
     }
 
@@ -587,24 +666,45 @@ export default class GameScene extends Phaser.Scene {
         this.score += gain;
         gameEvents.emit(EVENTS.SCORE, { score: this.score, gain });
 
-        this.refillTrayIfNeeded();
+        const needsRefill = this.tray.every((p) => !p);
         this.inputLocked = false;
         this.redrawAll();
+
+        if (needsRefill) {
+            this.refillTrayIfNeeded();
+            return;
+        }
 
         if (this.checkGameOver()) {
             this.gameOver = true;
             this.layoutSlotZones();
             this.persistMatch();
             gameEvents.emit(EVENTS.GAME_OVER, { score: this.score });
-        } else {
-            this.persistMatch();
+            return;
         }
+
+        this.persistMatch();
     }
 
     refillTrayIfNeeded() {
-        if (this.tray.every((p) => !p)) {
-            this.tray = dealTray(TRAY_SLOTS, this.theme.blocks.length, this.grid);
-        }
+        if (!this.tray.every((p) => !p)) return;
+        // Diferir el sesgo de combos un frame para no congelar el soltar la ficha.
+        const gridSnapshot = this.grid.map((row) => row.slice());
+        const maxColor = this.theme.blocks.length;
+        this.time.delayedCall(0, () => {
+            if (this.gameOver) return;
+            this.tray = dealTray(TRAY_SLOTS, maxColor, gridSnapshot);
+            this.layoutSlotZones();
+            this.drawTray();
+            if (this.checkGameOver()) {
+                this.gameOver = true;
+                this.layoutSlotZones();
+                this.persistMatch();
+                gameEvents.emit(EVENTS.GAME_OVER, { score: this.score });
+            } else {
+                this.persistMatch();
+            }
+        });
     }
 
     checkGameOver() {
@@ -614,6 +714,11 @@ export default class GameScene extends Phaser.Scene {
     }
 
     handleRestart() {
+        this.destroyDragContainer();
+        this.drag = null;
+        this.hoverAnchor = null;
+        this.hoverValid = false;
+        this.lastHoverKey = '';
         clearDraft();
         this.resetMatch(true, false);
         this.cameras.main.setBackgroundColor(this.theme.canvas);

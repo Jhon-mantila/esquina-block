@@ -27,11 +27,15 @@ export function createGame(parent, options = {}) {
             width,
             height,
         },
+        render: {
+            antialias: true,
+            roundPixels: true,
+        },
         scene: [],
         banner: false,
         audio: { noAudio: true },
         input: {
-            activePointers: 3,
+            activePointers: 2,
         },
     });
 

@@ -258,10 +258,15 @@ async function ensureBridge() {
 async function mountGame() {
     if (!gameHost.value) return;
     destroyGame();
-    const api = await ensureBridge();
-    game.value = api.createGame(gameHost.value, {
-        theme: theme.value,
-    });
+    try {
+        const api = await ensureBridge();
+        game.value = api.createGame(gameHost.value, {
+            theme: theme.value,
+        });
+    } catch (err) {
+        console.error('[EsquinaBlocks] no se pudo montar Phaser', err);
+        phaserReady.value = false;
+    }
 }
 
 function onThemeChange(/** @type {GameTheme} */ next) {
@@ -540,11 +545,11 @@ defineExpose({ applyScore, onRestart, gameHost });
             <div
                 id="game-container"
                 ref="gameHost"
-                class="relative mx-auto w-full max-w-md overflow-hidden rounded-2xl shadow-lg ring-1"
+                class="relative mx-auto w-full max-w-md overflow-hidden rounded-2xl shadow-lg ring-1 touch-none select-none"
                 :class="isDark
                     ? 'bg-[#111827] ring-cyan-800/50'
                     : 'bg-[#ffe0c2] ring-orange-300'"
-                style="aspect-ratio: 3 / 4; min-height: 22rem"
+                style="aspect-ratio: 3 / 4; min-height: 22rem; touch-action: none; -webkit-user-select: none; user-select: none"
                 role="application"
                 :aria-label="`Tablero Esquina Blocks, tema ${themeMeta.label}`"
             >

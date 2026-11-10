@@ -13,6 +13,11 @@ ln -sfn ../public .dev-root/esquinaimg
 ln -sfn ../public .dev-root/esquinabg
 ln -sfn ../public .dev-root/esquina2048
 ln -sfn ../public .dev-root/esquinablocks
+# Vite (import dinámico) pide /build/... en la raíz del host
+ln -sfn ../public/build .dev-root/build
+if [[ -f public/favicon.ico ]]; then
+  ln -sfn ../public/favicon.ico .dev-root/favicon.ico
+fi
 
 PORT="${PORT:-8000}"
 HOST="${HOST:-[::]}"

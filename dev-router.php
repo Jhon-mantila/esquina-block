@@ -39,6 +39,14 @@ if ($uri === '/' || $uri === '') {
     return true;
 }
 
+// Chunks dinámicos de Vite piden /build/... desde la raíz (no /esquinablocks/build/...).
+if (str_starts_with($uri, '/build/') || preg_match('#^/favicon\.(ico|png)$#', $uri) === 1) {
+    $static = __DIR__.'/.dev-root'.$uri;
+    if (is_file($static)) {
+        return false;
+    }
+}
+
 $pattern = '#^/('.implode('|', $tools).')(/.*)?$#';
 if (! preg_match($pattern, $uri, $matches)) {
     http_response_code(404);

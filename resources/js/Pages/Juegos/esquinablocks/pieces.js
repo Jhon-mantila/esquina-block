@@ -46,9 +46,17 @@ const SHAPE_CATALOG = [
     ] },
 ];
 
-const DEAL_ATTEMPTS = 42;
+const DEAL_ATTEMPTS_DESKTOP = 36;
+const DEAL_ATTEMPTS_MOBILE = 18;
 const FILLER_CHANCE = 0.48;
 const PURE_RANDOM_CHANCE = 0.16;
+
+function dealAttempts() {
+    if (typeof window !== 'undefined' && window.matchMedia?.('(pointer: coarse)').matches) {
+        return DEAL_ATTEMPTS_MOBILE;
+    }
+    return DEAL_ATTEMPTS_DESKTOP;
+}
 
 /**
  * @param {[number, number][]} cells
@@ -353,7 +361,7 @@ export function dealTray(count = 3, maxColor = 7, grid = null) {
     let bestTray = null;
     let bestScore = -Infinity;
 
-    for (let i = 0; i < DEAL_ATTEMPTS; i += 1) {
+    for (let i = 0; i < dealAttempts(); i += 1) {
         /** @type {PieceDef[]} */
         const tray = [];
         if (fillers.length && Math.random() < FILLER_CHANCE) {
