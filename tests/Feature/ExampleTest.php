@@ -190,12 +190,33 @@ class ExampleTest extends TestCase
             'esquinablock.adsense.enabled' => true,
             'esquinablock.adsense.slots.after_tool' => '1111111111',
             'esquinablock.adsense.slots.before_faq' => null,
+            'esquinablock.adsense.slots.side_left' => null,
+            'esquinablock.adsense.slots.side_right' => null,
+            'services.adsense.manual_units' => true,
         ]);
 
         $this->get('/')
             ->assertSee('adsbygoogle.js?client=ca-pub-1852556021136727', false)
             ->assertSee('data-ad-slot="1111111111"', false)
             ->assertDontSee('data-ad-slot=""', false)
+            ->assertDontSee('min-[1536px]:block', false);
+    }
+
+    public function test_adsense_manual_units_apagados_deja_el_script(): void
+    {
+        config([
+            'esquinablock.adsense.enabled' => true,
+            'esquinablock.adsense.slots.after_tool' => '1111111111',
+            'esquinablock.adsense.slots.before_faq' => '2222222222',
+            'esquinablock.adsense.slots.side_left' => '3333333333',
+            'esquinablock.adsense.slots.side_right' => '4444444444',
+            'services.adsense.manual_units' => false,
+        ]);
+
+        $this->get('/')
+            ->assertSee('adsbygoogle.js?client=ca-pub-1852556021136727', false)
+            ->assertDontSee('data-ad-slot="1111111111"', false)
+            ->assertDontSee('data-ad-slot="2222222222"', false)
             ->assertDontSee('min-[1536px]:block', false);
     }
 

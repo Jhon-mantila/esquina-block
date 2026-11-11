@@ -23,13 +23,14 @@
     );
     // max-w-6xl = 72rem (herramientas); max-w-3xl = 48rem (juegos EsquinaGamers)
     $contentMaxRem = $contentMaxRem ?? ($isGamersGame ? 48 : 72);
-    $sideSlots = array_filter([
+    $manualUnits = config('services.adsense.manual_units', true);
+    $sideSlots = $manualUnits ? array_filter([
         'left' => $adsense['slots']['side_left'] ?? null,
         'right' => $adsense['slots']['side_right'] ?? null,
-    ]);
+    ]) : [];
 @endphp
 
-@if (($adsense['enabled'] ?? false) && $sideSlots)
+@if ($manualUnits && ($adsense['enabled'] ?? false) && $sideSlots)
     {{--
         Anuncios verticales fijos en los huecos a ambos lados del contenido.
         Se crean solo si hay sitio al cargar: un <ins> oculto haría fallar a AdSense

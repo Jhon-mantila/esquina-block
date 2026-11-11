@@ -44,4 +44,18 @@ return [
         'debug' => (bool) env('GA4_DEBUG', false),
     ],
 
+    /*
+    | Anuncios AdSense.
+    | - enabled (por herramienta en config/esquina*.php): carga el script adsbygoogle.js
+    | - manual_units: bloques fijos after_tool / before_faq / laterales.
+    |   Pon ADSENSE_MANUAL_UNITS=false para probar solo Auto ads de Google
+    |   (el script del publisher sigue activo).
+    */
+    'adsense' => [
+        'manual_units' => filter_var(
+            env('ADSENSE_MANUAL_UNITS', true),
+            FILTER_VALIDATE_BOOLEAN
+        ),
+    ],
+
 ];

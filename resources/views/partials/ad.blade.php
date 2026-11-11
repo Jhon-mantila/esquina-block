@@ -13,9 +13,10 @@
                             : config('esquinablock.adsense')))))
     );
     $adSlot = $adsense['slots'][$position] ?? null;
+    $manualUnits = config('services.adsense.manual_units', true);
 @endphp
 
-@if ($adsense['enabled'] && $adSlot)
+@if ($manualUnits && ($adsense['enabled'] ?? false) && $adSlot)
     <aside class="mx-auto max-w-3xl px-4 {{ $class ?? '' }}" aria-label="Publicidad">
         <p class="mb-1 text-center text-[11px] uppercase tracking-wide text-slate-400">Publicidad</p>
         <ins class="adsbygoogle block min-h-[280px]"
