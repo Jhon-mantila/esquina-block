@@ -17,6 +17,8 @@ Documentación detallada por producto → carpeta [`readme/`](readme/).
 
 Producción: `https://esquinaweb.com/<ruta>/`
 
+Iconos SVG del menú de herramientas: [`public/images/tools/`](public/images/tools/) (`esquinablock.svg`, `esquinacut.svg`, `esquinaqr.svg`, `esquinaimg.svg`, `esquinapdf.svg`, `esquinabg.svg`). Los carga el partial [`resources/views/partials/tools-menu.blade.php`](resources/views/partials/tools-menu.blade.php).
+
 ## Juegos (EsquinaGamers)
 
 | Producto | Ruta | Resumen | Doc |
@@ -25,6 +27,8 @@ Producción: `https://esquinaweb.com/<ruta>/`
 | **Esquina Blocks** | `/esquinablocks/` | Puzzle tipo Block Blast (tablero 8×8, Phaser). | [readme/esquinablocks.md](readme/esquinablocks.md) |
 
 Producción: `https://esquinagamers.com/<ruta>/`
+
+Iconos SVG del menú de juegos: [`public/images/games/`](public/images/games/) (`esquina2048.svg`, `esquinablocks.svg`). Menú: [`resources/js/Components/GamesMenu.vue`](resources/js/Components/GamesMenu.vue).
 
 ## Privacidad
 

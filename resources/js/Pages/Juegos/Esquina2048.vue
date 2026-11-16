@@ -9,6 +9,7 @@ import {
     track2048Win,
     trackCrossToolClick,
 } from '@/analytics';
+import GamesMenu from '@/Components/GamesMenu.vue';
 
 const props = defineProps({
     siteUrl: { type: String, default: 'https://esquinagamers.com' },
@@ -427,24 +428,16 @@ watch(showGameOverAd, async (show) => {
             : 'bg-[#fff1e6] text-slate-900'"
     >
         <header
-            class="border-b"
+            class="relative z-[100] border-b"
             :class="isDark
                 ? 'border-cyan-900/50 bg-slate-950/80'
                 : 'border-orange-200/90 bg-[#fff7ed]/90'"
         >
             <div class="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-3">
-                <div>
-                    <p
-                        class="text-[11px] font-semibold tracking-wide uppercase"
-                        :class="isDark ? 'text-cyan-300' : 'text-orange-600'"
-                    >
-                        EsquinaGamers
-                    </p>
-                    <h1 class="text-xl font-bold tracking-tight sm:text-2xl">Esquina 2048</h1>
-                </div>
+                <GamesMenu current="2048" :is-dark="isDark" />
                 <a
                     :href="siteUrl"
-                    class="text-sm font-medium underline-offset-2 hover:underline"
+                    class="shrink-0 text-sm font-medium underline-offset-2 hover:underline"
                     :class="isDark ? 'text-slate-400 hover:text-cyan-300' : 'text-slate-500 hover:text-orange-700'"
                 >
                     esquinagamers.com
@@ -453,6 +446,7 @@ watch(showGameOverAd, async (show) => {
         </header>
 
         <main class="mx-auto max-w-3xl px-4 py-6 sm:py-8">
+            <h1 class="sr-only">Esquina 2048</h1>
             <p class="mb-5 text-sm" :class="isDark ? 'text-slate-400' : 'text-slate-600'">
                 Une fichas iguales hasta llegar a 2048. En PC usa las flechas o WASD; en el móvil desliza el dedo sobre el tablero.
             </p>

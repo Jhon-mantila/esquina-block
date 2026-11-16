@@ -19,8 +19,8 @@ cd "$(dirname "$0")"
 # --- edita estos valores ---
 HOST="${DEPLOY_HOST:-root@203.0.113.10}"
 REMOTE_DIR="${DEPLOY_DIR:-/var/www/tu-proyecto}"
-SITE_ORIGIN="${DEPLOY_SITE:-https://ejemplo.com}"
-TOOLS=(esquinablock esquinacut esquinaqr esquinapdf esquinaimg)
+#SITE_ORIGIN="${DEPLOY_SITE:-https://ejemplo.com}"
+#TOOLS=(esquinablock esquinacut esquinaqr esquinapdf esquinaimg)
 # Opcional: smoke test del juego (dominio distinto)
 # GAMERS_ORIGIN="${DEPLOY_GAMERS:-https://esquinagamers.com}"
 # ---------------------------
