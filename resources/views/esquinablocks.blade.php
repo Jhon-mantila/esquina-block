@@ -15,6 +15,7 @@
         <meta name="description" content="{{ $seo['description'] }}">
         <meta name="robots" content="index, follow">
         <link rel="canonical" href="{{ $canonical }}">
+        <link rel="icon" href="{{ asset('images/games/esquinablocks.svg') }}" type="image/svg+xml">
         <meta name="theme-color" content="#070b16">
 
         <meta property="og:type" content="website">
