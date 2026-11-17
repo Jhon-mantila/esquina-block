@@ -28,6 +28,7 @@ function pageContext() {
     else if (path.includes('/esquinablocks')) toolFromPath = 'blocks';
     else if (path.includes('/esquinablock')) toolFromPath = 'block';
     else if (path.includes('/esquinaimg')) toolFromPath = 'img';
+    else if (path.includes('/esquinaupscale')) toolFromPath = 'upscale';
     else if (path.includes('/esquinabg')) toolFromPath = 'bg';
     else if (path.includes('/esquina2048')) toolFromPath = '2048';
 

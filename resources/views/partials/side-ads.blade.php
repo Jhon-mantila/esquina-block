@@ -17,9 +17,11 @@
                             ? config('esquinapdf.adsense')
                             : (str_contains(request()->getBasePath(), 'esquinaimg')
                                 ? config('esquinaimg.adsense')
-                                : (str_contains(request()->getBasePath(), 'esquinabg')
-                                    ? config('esquinabg.adsense')
-                                    : config('esquinablock.adsense')))))))
+                                : (str_contains(request()->getBasePath(), 'esquinaupscale')
+                                    ? config('esquinaupscale.adsense')
+                                    : (str_contains(request()->getBasePath(), 'esquinabg')
+                                        ? config('esquinabg.adsense')
+                                        : config('esquinablock.adsense'))))))))
     );
     // max-w-6xl = 72rem (herramientas); max-w-3xl = 48rem (juegos EsquinaGamers)
     $contentMaxRem = $contentMaxRem ?? ($isGamersGame ? 48 : 72);

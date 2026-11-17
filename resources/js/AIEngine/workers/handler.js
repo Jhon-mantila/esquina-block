@@ -66,7 +66,12 @@ export function createInferenceHandler(deps) {
             }
 
             try {
-                const output = await deps.run(entry.session, entry.model, message.image);
+                const output = await deps.run(
+                    entry.session,
+                    entry.model,
+                    message.image,
+                    (status) => post({ type: 'status', id: message.id, status }),
+                );
                 post({
                     type: 'result',
                     id: message.id,

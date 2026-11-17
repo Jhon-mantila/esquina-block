@@ -100,6 +100,37 @@ test('si alta falla el siguiente modelo es el básico, no el equilibrado', () =>
     assert.equal(next.tier, 'basic');
 });
 
+test('sin modelo equilibrado, automático en un equipo intermedio usa el ligero', () => {
+    const models = [
+        { id: 'sr-basic', task: 'super-resolution', tier: 'basic', providers: ['wasm'] },
+        { id: 'sr-high', task: 'super-resolution', tier: 'high', providers: ['wasm'] },
+    ];
+    const result = selectModel({
+        models,
+        task: 'super-resolution',
+        quality: 'auto',
+        profile: profile('balanced'),
+    });
+    assert.equal(result.model.tier, 'basic');
+    assert.equal(result.quality, 'basic');
+});
+
+test('pedir equilibrado a mano falla si esa herramienta no lo tiene', () => {
+    const models = [
+        { id: 'sr-basic', task: 'super-resolution', tier: 'basic', providers: ['wasm'] },
+        { id: 'sr-high', task: 'super-resolution', tier: 'high', providers: ['wasm'] },
+    ];
+    assert.throws(
+        () => selectModel({
+            models,
+            task: 'super-resolution',
+            quality: 'balanced',
+            profile: profile('balanced'),
+        }),
+        (err) => err.code === 'unknown-model',
+    );
+});
+
 test('el modelo básico no tiene un nivel inferior', () => {
     const basic = BACKGROUND_REMOVAL_MODELS.find((model) => model.tier === 'basic');
     assert.equal(fallbackModel(BACKGROUND_REMOVAL_MODELS, 'background-removal', basic), null);

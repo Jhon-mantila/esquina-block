@@ -52,12 +52,27 @@ export function selectModel({ models, task, quality, profile, image }) {
     }
 
     const allowed = allowedTiers(profile.tier);
-    const resolved = quality === 'auto' ? profile.tier : quality;
-    if (!allowed[resolved]) {
+    const preferred = quality === 'auto' ? profile.tier : quality;
+    if (!allowed[preferred]) {
         throw new EngineError('quality-unavailable', 'Esta calidad no está disponible en este equipo.');
     }
 
-    const model = taskModels.find((item) => item.tier === resolved);
+    let resolved = preferred;
+    let model = taskModels.find((item) => item.tier === resolved) ?? null;
+    // Automático baja al siguiente modelo que sí exista. Una elección manual no cambia de nivel.
+    if (!model && quality === 'auto') {
+        const order = ['high', 'balanced', 'basic'];
+        const start = order.indexOf(preferred);
+        for (let index = start + 1; index < order.length; index += 1) {
+            const tier = order[index];
+            if (!allowed[tier]) continue;
+            const candidate = taskModels.find((item) => item.tier === tier);
+            if (!candidate) continue;
+            model = candidate;
+            resolved = tier;
+            break;
+        }
+    }
     if (!model) {
         throw new EngineError('unknown-model', 'No hay un modelo para esta calidad.');
     }

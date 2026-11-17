@@ -138,6 +138,28 @@ class ExampleTest extends TestCase
         $this->assertStringContainsString('esquinabg', $content);
     }
 
+    public function test_esquina_upscale_carga_correctamente(): void
+    {
+        $request = \Illuminate\Http\Request::create('http://localhost/esquinaupscale/', 'GET', server: [
+            'SCRIPT_NAME' => '/esquinaupscale/index.php',
+            'SCRIPT_FILENAME' => public_path('index.php'),
+        ]);
+
+        $response = $this->app->handle($request);
+
+        $this->assertSame(200, $response->getStatusCode());
+        $content = $response->getContent();
+        $this->assertStringContainsString('EsquinaUpscale\\/Index', $content);
+        $this->assertStringContainsString('Esquina Upscale', $content);
+        $this->assertStringContainsString('Ampliar imágenes', $content);
+        $this->assertStringContainsString('SoftwareApplication', $content);
+        $this->assertStringContainsString('FAQPage', $content);
+        $this->assertStringContainsString('¿Es gratis Esquina Upscale?', $content);
+        $this->assertStringContainsString('Cómo funciona Esquina Upscale', $content);
+        $this->assertStringContainsString('preguntas-frecuentes', $content);
+        $this->assertStringContainsString('esquinaupscale', $content);
+    }
+
     public function test_esquina_2048_carga_correctamente(): void
     {
         $request = \Illuminate\Http\Request::create('http://localhost/esquina2048/', 'GET', server: [

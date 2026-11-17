@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\EsquinaBGController;
+use App\Http\Controllers\EsquinaUpscaleController;
 use App\Http\Controllers\EsquinaBlockController;
 use App\Http\Controllers\EsquinaCutController;
 use App\Http\Controllers\EsquinaImgController;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 /*
 | Apache (y el symlink local .dev-root) montan la misma carpeta public/ en
 | /esquinablock, /esquinacut, /esquinaqr, /esquinapdf, /esquinaimg, /esquinabg,
+| /esquinaupscale,
 | /esquina2048 y /esquinablocks.
 | Laravel ve la ruta como "/" ; la herramienta se elige por base path.
 |
@@ -43,6 +45,10 @@ Route::get('/', function () {
 
     if (str_contains($base, 'esquinaimg')) {
         return app(EsquinaImgController::class)->index();
+    }
+
+    if (str_contains($base, 'esquinaupscale')) {
+        return app(EsquinaUpscaleController::class)->index();
     }
 
     if (str_contains($base, 'esquinabg')) {

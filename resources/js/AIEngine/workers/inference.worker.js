@@ -3,6 +3,7 @@ import { loadModelBuffer } from '../cache/modelCache.js';
 import { PUBLIC_MODEL_ERROR } from '../core/errors.js';
 import { configureWasm, createWasmSession } from '../providers/wasm.js';
 import { runBackgroundRemoval } from '../tasks/backgroundRemoval.js';
+import { runSuperResolution } from '../tasks/superResolution.js';
 import { createInferenceHandler } from './handler.js';
 
 const handle = createInferenceHandler({
@@ -17,9 +18,12 @@ const handle = createInferenceHandler({
         void provider;
         throw new Error('Proveedor no disponible.');
     },
-    async run(session, model, image) {
+    async run(session, model, image, onStatus) {
         if (model.task === 'background-removal') {
             return runBackgroundRemoval(ort, session, model, image);
+        }
+        if (model.task === 'super-resolution') {
+            return runSuperResolution(ort, session, model, image, onStatus);
         }
         throw new Error('Tarea sin adaptador.');
     },

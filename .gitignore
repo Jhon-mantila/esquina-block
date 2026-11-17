@@ -18,6 +18,7 @@
 /public/hot
 /public/storage
 /public/models/esquinabg/*.onnx
+/public/models/esquinaupscale/*.onnx
 /storage/*.key
 /storage/pail
 /vendor

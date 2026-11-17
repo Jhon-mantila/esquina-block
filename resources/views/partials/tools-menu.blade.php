@@ -1,7 +1,7 @@
 @php
     /**
      * Menú de herramientas EsquinaWeb.
-     * @var string $current  block|cut|qr|img|pdf|bg
+     * @var string $current  block|cut|qr|img|pdf|bg|upscale
      */
     $current = $current ?? 'block';
 
@@ -68,6 +68,13 @@
             'hint' => 'Quitar fondo',
             'url' => $origin.'/esquinabg/',
             'file' => 'esquinabg.svg',
+        ],
+        [
+            'id' => 'upscale',
+            'name' => 'Esquina Upscale',
+            'hint' => 'Ampliar imágenes',
+            'url' => $origin.'/esquinaupscale/',
+            'file' => 'esquinaupscale.svg',
         ],
     ];
 

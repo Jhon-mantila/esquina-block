@@ -14,10 +14,11 @@ Documentación detallada por producto → carpeta [`readme/`](readme/).
 | **Esquina PDF** | `/esquinapdf/` | Unir, borrar páginas, texto e imágenes→PDF. | [readme/esquinapdf.md](readme/esquinapdf.md) |
 | **Esquina Img** | `/esquinaimg/` | Comprimir, convertir y redimensionar imágenes. | [readme/esquinaimg.md](readme/esquinaimg.md) |
 | **Esquina BG** | `/esquinabg/` | Quitar fondo (ONNX: u2netp, silueta, RMBG) + pincel de máscara. | [readme/esquinabg.md](readme/esquinabg.md) |
+| **Esquina Upscale** | `/esquinaupscale/` | Ampliar fotos 4× con superresolución neuronal en el navegador. | [readme/esquinaupscale.md](readme/esquinaupscale.md) |
 
 Producción: `https://esquinaweb.com/<ruta>/`
 
-Iconos SVG del menú de herramientas: [`public/images/tools/`](public/images/tools/) (`esquinablock.svg`, `esquinacut.svg`, `esquinaqr.svg`, `esquinaimg.svg`, `esquinapdf.svg`, `esquinabg.svg`). Los carga el partial [`resources/views/partials/tools-menu.blade.php`](resources/views/partials/tools-menu.blade.php).
+Iconos SVG del menú de herramientas: [`public/images/tools/`](public/images/tools/) (`esquinablock.svg`, `esquinacut.svg`, `esquinaqr.svg`, `esquinaimg.svg`, `esquinapdf.svg`, `esquinabg.svg`, `esquinaupscale.svg`). Los carga el partial [`resources/views/partials/tools-menu.blade.php`](resources/views/partials/tools-menu.blade.php).
 
 ## Juegos (EsquinaGamers)
 
@@ -44,6 +45,7 @@ En las herramientas, el procesamiento es **en el navegador**. No hay login ni ba
 | Build | Vite 7 |
 | Juegos | Phaser 3 |
 | BG | ONNX Runtime Web + modelos en `public/models/esquinabg/` |
+| Upscale | ONNX Runtime Web + modelos en `public/models/esquinaupscale/` |
 
 ## Desarrollo local
 
