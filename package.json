@@ -5,7 +5,8 @@
     "scripts": {
         "build": "vite build",
         "dev": "vite",
-        "serve": "bash dev-serve.sh"
+        "serve": "bash dev-serve.sh",
+        "test:ai": "node --test resources/js/AIEngine/core/*.test.js resources/js/AIEngine/cache/*.test.js resources/js/AIEngine/providers/*.test.js resources/js/AIEngine/workers/*.test.js resources/js/AIEngine/tasks/*.test.js"
     },
     "devDependencies": {
         "@tailwindcss/vite": "^4.0.0",

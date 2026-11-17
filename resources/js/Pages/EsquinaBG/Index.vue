@@ -1,9 +1,9 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { allowedTiers, classifyDevice } from '@/AIEngine';
 import { trackEvent, trackSubirImagen } from '@/analytics';
-import { detectDeviceTier } from './detectDeviceTier.js';
 import MaskBrushEditor from './MaskBrushEditor.vue';
-import { removeBackgroundInWorker } from './removeBackgroundClient.js';
+import { releaseBackgroundSession, removeBackgroundWithEngine } from './removeBackgroundEngine.js';
 
 const props = defineProps({
     siblings: {
@@ -18,22 +18,27 @@ const props = defineProps({
     },
 });
 
-/** @typedef {'basic' | 'balanced' | 'high'} ModelId */
+/** @typedef {'auto' | 'basic' | 'balanced' | 'high'} QualityId */
 
 const MODEL_OPTIONS = [
     {
-        id: /** @type {ModelId} */ ('basic'),
-        label: 'Rápido (Fondos simples)',
-        hint: 'Ideal para fondos lisos o PCs modestos.',
+        id: /** @type {QualityId} */ ('auto'),
+        label: 'Automático (recomendado)',
+        hint: 'Elige la calidad según tu equipo.',
     },
     {
-        id: /** @type {ModelId} */ ('balanced'),
-        label: 'Equilibrado (Recomendado)',
+        id: /** @type {QualityId} */ ('basic'),
+        label: 'Ligero',
+        hint: 'Ideal para fondos lisos o equipos modestos.',
+    },
+    {
+        id: /** @type {QualityId} */ ('balanced'),
+        label: 'Equilibrado',
         hint: 'Buen detalle en la mayoría de fotos.',
     },
     {
-        id: /** @type {ModelId} */ ('high'),
-        label: 'Alta Calidad (Detallado)',
+        id: /** @type {QualityId} */ ('high'),
+        label: 'Alta calidad',
         hint: 'Más precisión en cabello y bordes finos.',
     },
 ];
@@ -41,8 +46,19 @@ const MODEL_OPTIONS = [
 const INPUT_ACCEPT = 'image/jpeg,image/jpg,image/png,image/webp,.jpg,.jpeg,.png,.webp';
 const INPUT_FORMATS_HINT = 'JPG, PNG o WebP';
 
-const device = ref(detectDeviceTier());
-const selectedModel = ref(/** @type {ModelId} */ (device.value.defaultModel));
+function currentProfile() {
+    const ramGb = typeof navigator !== 'undefined' && typeof navigator.deviceMemory === 'number'
+        ? navigator.deviceMemory
+        : null;
+    const cores = typeof navigator !== 'undefined' && typeof navigator.hardwareConcurrency === 'number'
+        ? navigator.hardwareConcurrency
+        : 2;
+    const tier = classifyDevice({ ramGb, cores });
+    return { tier, allowed: allowedTiers(tier) };
+}
+
+const device = ref(currentProfile());
+const selectedModel = ref(/** @type {QualityId} */ ('auto'));
 const advancedOpen = ref(false);
 
 /** @type {import('vue').Ref<File|null>} */
@@ -59,7 +75,9 @@ const resultBlob = ref(/** @type {Blob|null} */ (null));
 const baseResultUrl = ref('');
 
 const busy = ref(false);
-const progress = ref(0);
+const downloading = ref(false);
+/** @type {import('vue').Ref<number | null>} */
+const downloadRatio = ref(null);
 const error = ref('');
 const notice = ref('');
 const dragging = ref(false);
@@ -85,7 +103,8 @@ const selectedModelLabel = computed(() => {
     return opt?.label || 'Equilibrado';
 });
 
-function isModelAllowed(/** @type {ModelId} */ id) {
+function isModelAllowed(/** @type {QualityId} */ id) {
+    if (id === 'auto' || id === 'basic') return true;
     return !!device.value.allowed[id];
 }
 
@@ -178,9 +197,25 @@ function openPicker() {
     fileInput.value?.click();
 }
 
-function selectModel(/** @type {ModelId} */ id) {
+function selectModel(/** @type {QualityId} */ id) {
     if (!isModelAllowed(id)) return;
     selectedModel.value = id;
+}
+
+/**
+ * @param {{ phase?: string, loaded?: number, total?: number }} status
+ */
+function onEngineStatus(status) {
+    if (status?.phase === 'downloading') {
+        downloading.value = true;
+        downloadRatio.value = typeof status.total === 'number' && status.total > 0
+            ? status.loaded / status.total
+            : null;
+        return;
+    }
+    if (status?.phase === 'available' || status?.phase === 'preparing' || status?.phase === 'ready' || status?.phase === 'error') {
+        downloading.value = false;
+    }
 }
 
 async function onRemoveBackground() {
@@ -195,16 +230,13 @@ async function onRemoveBackground() {
     clearResult();
 
     busy.value = true;
-    progress.value = 1;
+    downloading.value = false;
+    downloadRatio.value = null;
     try {
-        const result = await removeBackgroundInWorker(
+        const result = await removeBackgroundWithEngine(
             sourceFile.value,
             selectedModel.value,
-            {
-                onProgress(percent) {
-                    progress.value = Math.max(0, Math.min(100, Math.round(percent)));
-                },
-            },
+            { onStatus: onEngineStatus },
         );
 
         resultBlob.value = result.blob;
@@ -212,20 +244,19 @@ async function onRemoveBackground() {
         baseResultUrl.value = url;
         resultUrl.value = url;
         notice.value = result.notice || '';
-        progress.value = 100;
         trackEvent('process_image', {
             tool: 'bg',
-            model: selectedModel.value,
+            model: result.usedModel,
             image_width: sourceWidth.value,
             image_height: sourceHeight.value,
         });
     } catch (err) {
         error.value = err instanceof Error
             ? err.message
-            : 'No se pudo quitar el fondo. Prueba con una imagen más pequeña o el modo Rápido.';
-        progress.value = 0;
+            : 'No se pudo quitar el fondo. Inténtalo de nuevo.';
     } finally {
         busy.value = false;
+        downloading.value = false;
     }
 }
 
@@ -261,14 +292,15 @@ function downloadPng() {
 }
 
 onMounted(() => {
-    device.value = detectDeviceTier();
+    device.value = currentProfile();
     if (!isModelAllowed(selectedModel.value)) {
-        selectedModel.value = device.value.defaultModel;
+        selectedModel.value = 'auto';
     }
 });
 
 onBeforeUnmount(() => {
     clearSource();
+    releaseBackgroundSession();
 });
 </script>
 
@@ -350,9 +382,22 @@ onBeforeUnmount(() => {
                     :disabled="!canProcess"
                     @click="onRemoveBackground"
                 >
-                    <span v-if="busy">Quitando fondo… {{ progress }}%</span>
+                    <span v-if="busy">Quitando fondo…</span>
                     <span v-else>Quitar Fondo a mi Imagen</span>
                 </button>
+                <div
+                    v-if="downloading"
+                    class="h-1 overflow-hidden rounded-full bg-slate-200"
+                    role="status"
+                    aria-label="Preparando el modelo"
+                >
+                    <div
+                        v-if="downloadRatio !== null"
+                        class="h-full bg-blue-600"
+                        :style="{ width: `${Math.round(downloadRatio * 100)}%` }"
+                    />
+                    <div v-else class="h-full animate-pulse bg-blue-600/70" />
+                </div>
 
                 <!-- Visor lado a lado (antes del retoque) -->
                 <div v-if="!hasResult" class="grid gap-4 sm:grid-cols-2">
@@ -464,7 +509,7 @@ onBeforeUnmount(() => {
                 class="border-t border-slate-200 px-4 py-4"
             >
                 <p class="text-sm text-slate-600">
-                    Elige la calidad. Las opciones que tu equipo no soporta quedan deshabilitadas.
+                    Elige la calidad. Automático usa la que mejor encaja en tu equipo.
                 </p>
 
                 <fieldset class="mt-4 space-y-3">

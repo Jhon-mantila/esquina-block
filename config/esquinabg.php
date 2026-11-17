@@ -58,15 +58,15 @@ return [
         ],
         [
             'q' => '¿Qué calidad debo elegir?',
-            'a' => 'En la mayoría de PCs basta con Equilibrado. Si tu equipo es modesto, usa Rápido. Alta Calidad solo en PCs potentes.',
+            'a' => 'Deja Automático. Si quieres decidir, usa Ligero en equipos modestos, Equilibrado en la mayoría y Alta calidad cuando el equipo lo permita.',
         ],
         [
             'q' => '¿Por qué una opción aparece deshabilitada?',
-            'a' => 'Para no saturar tu memoria. Si el PC no da para un modo, verás “Requiere un PC más potente” y puedes usar uno más ligero.',
+            'a' => 'Para no saturar tu memoria. Si el equipo no da para un modo, verás “Requiere un PC más potente” y puedes usar uno más ligero o dejar Automático.',
         ],
         [
             'q' => '¿Funciona en el móvil?',
-            'a' => 'Sí, pero en móviles o portátiles antiguos conviene el modo Rápido. El proceso puede tardar más si la foto es grande.',
+            'a' => 'Sí, pero en móviles o portátiles antiguos conviene el modo Ligero. El proceso puede tardar más si la foto es grande.',
         ],
     ],
 

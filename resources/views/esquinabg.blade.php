@@ -23,7 +23,7 @@
                 'featureList' => [
                     'Quitar fondo de fotos',
                     'Descarga PNG con transparencia',
-                    'Modos Rápido, Equilibrado y Alta Calidad',
+                    'Modos Automático, Ligero, Equilibrado y Alta calidad',
                     'Procesamiento local: tus archivos no se envían al servidor',
                 ],
                 'publisher' => [
@@ -139,7 +139,7 @@
                         <li class="rounded-2xl border border-slate-200 bg-white p-5">
                             <span class="grid h-8 w-8 place-items-center rounded-full bg-blue-600 font-semibold text-white">2</span>
                             <h3 class="mt-3 font-semibold text-slate-900">Quita el fondo</h3>
-                            <p class="mt-1 text-sm text-slate-600">Un clic usa el modo Equilibrado (o el que tu PC permita). Opciones avanzadas si lo necesitas.</p>
+                            <p class="mt-1 text-sm text-slate-600">Un clic usa Automático. En opciones avanzadas puedes elegir Ligero, Equilibrado o Alta calidad.</p>
                         </li>
                         <li class="rounded-2xl border border-slate-200 bg-white p-5">
                             <span class="grid h-8 w-8 place-items-center rounded-full bg-blue-600 font-semibold text-white">3</span>
