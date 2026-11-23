@@ -13,7 +13,7 @@
         @endisset
 
         <nav class="mt-6" aria-label="Otras herramientas">
-            <ul class="grid grid-cols-2 gap-2 sm:grid-cols-4 xl:grid-cols-8">
+            <ul class="grid grid-cols-2 gap-2 sm:grid-cols-4">
                 @foreach ($tools as $tool)
                     <li>
                         @if ($tool['id'] === $current)
