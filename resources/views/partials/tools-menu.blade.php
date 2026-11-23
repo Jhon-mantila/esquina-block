@@ -1,7 +1,7 @@
 @php
     /**
      * Menú de herramientas EsquinaWeb.
-     * @var string $current  block|cut|qr|img|pdf|bg|upscale
+     * @var string $current  block|cut|qr|img|pdf|bg|upscale|eraser
      */
     $current = $current ?? 'block';
 
@@ -75,6 +75,13 @@
             'hint' => 'Ampliar imágenes',
             'url' => $origin.'/esquinaupscale/',
             'file' => 'esquinaupscale.svg',
+        ],
+        [
+            'id' => 'eraser',
+            'name' => 'Esquina Eraser',
+            'hint' => 'Quitar objetos',
+            'url' => $origin.'/esquinaeraser/',
+            'file' => 'esquinaeraser.svg',
         ],
     ];
 

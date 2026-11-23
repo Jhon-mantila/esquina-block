@@ -69,6 +69,84 @@ test('si todos los proveedores fallan, el mensaje no incluye el error de ONNX', 
     assert.equal(error.message.includes('onnxruntime'), false);
 });
 
+test('si WebGPU procesa mal, el handler crea la sesión wasm y devuelve ese proveedor', async () => {
+    const created = [];
+    let runs = 0;
+    const handler = createInferenceHandler({
+        async loadBuffer() {
+            return new ArrayBuffer(4);
+        },
+        async createSession(_buffer, provider) {
+            created.push(provider);
+            return { id: provider };
+        },
+        async run(session) {
+            runs += 1;
+            if (session.id === 'webgpu') throw new Error('kernel failed');
+            return { width: 2, height: 2, data: new Uint8ClampedArray(16) };
+        },
+    });
+    const { messages, send } = posted(handler);
+
+    await send({
+        type: 'load',
+        id: 1,
+        token: 's4',
+        model: { id: 'lama', task: 'inpainting' },
+        providers: ['webgpu', 'wasm'],
+    });
+    await send({
+        type: 'run',
+        id: 2,
+        token: 's4',
+        image: { width: 2, height: 2, data: new Uint8ClampedArray(16) },
+        mask: { width: 2, height: 2, data: new Uint8Array(4) },
+    });
+
+    assert.deepEqual(created, ['webgpu', 'wasm']);
+    assert.equal(runs, 2);
+    const result = messages.at(-1);
+    assert.equal(result.type, 'result');
+    assert.equal(result.provider, 'wasm');
+    assert.equal(result.width, 2);
+});
+
+test('la máscara viaja junto a la imagen', async () => {
+    /** @type {object | null} */
+    let seen = null;
+    const handler = createInferenceHandler({
+        async loadBuffer() {
+            return new ArrayBuffer(1);
+        },
+        async createSession() {
+            return { id: 'wasm' };
+        },
+        async run(_session, _model, image) {
+            seen = image;
+            return { width: image.width, height: image.height, data: image.data };
+        },
+    });
+    const { send } = posted(handler);
+    const mask = new Uint8Array([0, 255]);
+
+    await send({
+        type: 'load',
+        id: 1,
+        token: 's5',
+        model: { id: 'lama' },
+        providers: ['wasm'],
+    });
+    await send({
+        type: 'run',
+        id: 2,
+        token: 's5',
+        image: { width: 2, height: 1, data: new Uint8ClampedArray(8) },
+        mask: { width: 2, height: 1, data: mask },
+    });
+
+    assert.equal(seen.mask.data, mask);
+});
+
 test('release elimina la sesión y un run posterior no la reutiliza', async () => {
     let released = false;
     const handler = createInferenceHandler({

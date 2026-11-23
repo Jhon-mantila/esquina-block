@@ -162,6 +162,38 @@ test('dos tareas conservan su propia sesión', async () => {
     assert.deepEqual(released, []);
 });
 
+test('si la ejecución informa otro proveedor, la sesión lo adopta', async () => {
+    const ai = await EsquinaAI.create({
+        profile: profile('basic', { webgpu: 'available' }),
+        models: [{
+            id: 'inpainting-lama',
+            task: 'inpainting',
+            tier: 'basic',
+            version: '1.0.0',
+            providers: ['webgpu', 'wasm'],
+        }],
+        runner: {
+            async load(_model, providers) {
+                return { token: 1, provider: providers[0], tier: 'basic' };
+            },
+            async run() {
+                return {
+                    width: 1,
+                    height: 1,
+                    data: new Uint8ClampedArray(4),
+                    provider: 'wasm',
+                };
+            },
+            async release() {},
+        },
+    });
+
+    const session = await ai.open({ task: 'inpainting', quality: 'basic' });
+    assert.equal(session.provider, 'webgpu');
+    await session.run({ width: 1, height: 1, data: new Uint8ClampedArray([0, 0, 0, 255]) });
+    assert.equal(session.provider, 'wasm');
+});
+
 test('si la ejecución falla, reintenta con el básico y no con el equilibrado', async () => {
     const loaded = [];
     let runs = 0;

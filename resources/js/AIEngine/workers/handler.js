@@ -27,7 +27,12 @@ export function createInferenceHandler(deps) {
                 for (const provider of message.providers ?? []) {
                     try {
                         const session = await deps.createSession(buffer, provider);
-                        sessions.set(message.token, { session, model: message.model, provider });
+                        sessions.set(message.token, {
+                            session,
+                            model: message.model,
+                            provider,
+                            providers: message.providers ?? [provider],
+                        });
                         post({
                             type: 'loaded',
                             id: message.id,
@@ -65,29 +70,55 @@ export function createInferenceHandler(deps) {
                 return;
             }
 
-            try {
-                const output = await deps.run(
-                    entry.session,
-                    entry.model,
-                    message.image,
-                    (status) => post({ type: 'status', id: message.id, status }),
-                );
-                post({
-                    type: 'result',
-                    id: message.id,
-                    token: message.token,
-                    width: output.width,
-                    height: output.height,
-                    data: output.data,
-                });
-            } catch {
-                post({
-                    type: 'error',
-                    id: message.id,
-                    code: 'model-failed',
-                    message: PUBLIC_MODEL_ERROR,
-                });
+            const image = message.mask
+                ? { ...message.image, mask: message.mask }
+                : message.image;
+            const providers = entry.providers?.length ? entry.providers : [entry.provider];
+            let start = providers.indexOf(entry.provider);
+            if (start < 0) start = 0;
+            const report = (status) => post({ type: 'status', id: message.id, status });
+
+            for (let index = start; index < providers.length; index += 1) {
+                const provider = providers[index];
+                if (index !== start) {
+                    try {
+                        const loaded = await deps.loadBuffer(entry.model, () => {});
+                        const buffer = loaded instanceof ArrayBuffer ? loaded : loaded.buffer;
+                        try {
+                            await entry.session?.release?.();
+                        } catch {
+                            // La sesión que falló al procesar ya no importa.
+                        }
+                        entry.session = await deps.createSession(buffer, provider);
+                        entry.provider = provider;
+                    } catch {
+                        continue;
+                    }
+                }
+
+                try {
+                    const output = await deps.run(entry.session, entry.model, image, report);
+                    post({
+                        type: 'result',
+                        id: message.id,
+                        token: message.token,
+                        provider: entry.provider,
+                        width: output.width,
+                        height: output.height,
+                        data: output.data,
+                    });
+                    return;
+                } catch {
+                    // Crear la sesión no basta: si el procesamiento falla, se prueba el siguiente proveedor.
+                }
             }
+
+            post({
+                type: 'error',
+                id: message.id,
+                code: 'model-failed',
+                message: PUBLIC_MODEL_ERROR,
+            });
             return;
         }
 

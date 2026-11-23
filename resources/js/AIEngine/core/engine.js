@@ -85,7 +85,14 @@ function createApi(state) {
                     const report = opts.onStatus ?? onStatus;
                     try {
                         report({ phase: 'preparing' });
-                        const output = await runner.run(handle, input, { onStatus: report });
+                        const output = await runner.run(handle, input, {
+                            onStatus: report,
+                            transfer: opts.transfer === true,
+                        });
+                        if (output?.provider) {
+                            handle.provider = output.provider;
+                            session.provider = output.provider;
+                        }
                         report({ phase: 'ready' });
                         return output;
                     } catch (err) {
@@ -117,7 +124,14 @@ function createApi(state) {
                         session.notice = FALLBACK_NOTICE;
                         try {
                             report({ phase: 'preparing' });
-                            const output = await runner.run(handle, input, { onStatus: report });
+                            const output = await runner.run(handle, input, {
+                                onStatus: report,
+                                transfer: opts.transfer === true,
+                            });
+                            if (output?.provider) {
+                                handle.provider = output.provider;
+                                session.provider = output.provider;
+                            }
                             report({ phase: 'ready' });
                             return output;
                         } catch (runErr) {

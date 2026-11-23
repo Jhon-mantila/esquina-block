@@ -13,7 +13,7 @@
 
 $uri = urldecode(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?? '/');
 
-$tools = ['esquinablock', 'esquinacut', 'esquinaqr', 'esquinapdf', 'esquinaimg', 'esquinabg', 'esquinaupscale', 'esquina2048', 'esquinablocks'];
+$tools = ['esquinablock', 'esquinacut', 'esquinaqr', 'esquinapdf', 'esquinaimg', 'esquinabg', 'esquinaupscale', 'esquinaeraser', 'esquina2048', 'esquinablocks'];
 
 if (in_array($uri, array_map(fn ($t) => '/'.$t, $tools), true)) {
     header('Location: '.$uri.'/', true, 301);
@@ -33,6 +33,7 @@ if ($uri === '/' || $uri === '') {
     echo '<li><a href="/esquinaimg/">Esquina Img</a> — comprimir y convertir imágenes</li>';
     echo '<li><a href="/esquinabg/">Esquina BG</a> — quitar fondo de imágenes</li>';
     echo '<li><a href="/esquinaupscale/">Esquina Upscale</a> — ampliar imágenes</li>';
+    echo '<li><a href="/esquinaeraser/">Esquina Eraser</a> — quitar objetos</li>';
     echo '<li><a href="/esquina2048/">Esquina 2048</a> — juego 2048</li>';
     echo '<li><a href="/esquinablocks/">Esquina Blocks</a> — puzzle de bloques</li>';
     echo '</ul></body></html>';

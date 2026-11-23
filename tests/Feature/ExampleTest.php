@@ -160,6 +160,28 @@ class ExampleTest extends TestCase
         $this->assertStringContainsString('esquinaupscale', $content);
     }
 
+    public function test_esquina_eraser_carga_correctamente(): void
+    {
+        $request = \Illuminate\Http\Request::create('http://localhost/esquinaeraser/', 'GET', server: [
+            'SCRIPT_NAME' => '/esquinaeraser/index.php',
+            'SCRIPT_FILENAME' => public_path('index.php'),
+        ]);
+
+        $response = $this->app->handle($request);
+
+        $this->assertSame(200, $response->getStatusCode());
+        $content = $response->getContent();
+        $this->assertStringContainsString('EsquinaEraser\\/Index', $content);
+        $this->assertStringContainsString('Esquina Eraser', $content);
+        $this->assertStringContainsString('Quitar objetos', $content);
+        $this->assertStringContainsString('SoftwareApplication', $content);
+        $this->assertStringContainsString('FAQPage', $content);
+        $this->assertStringContainsString('¿Es gratis Esquina Eraser?', $content);
+        $this->assertStringContainsString('Cómo funciona Esquina Eraser', $content);
+        $this->assertStringContainsString('preguntas-frecuentes', $content);
+        $this->assertStringContainsString('esquinaeraser', $content);
+    }
+
     public function test_esquina_2048_carga_correctamente(): void
     {
         $request = \Illuminate\Http\Request::create('http://localhost/esquina2048/', 'GET', server: [

@@ -12,6 +12,7 @@ ln -sfn ../public .dev-root/esquinapdf
 ln -sfn ../public .dev-root/esquinaimg
 ln -sfn ../public .dev-root/esquinabg
 ln -sfn ../public .dev-root/esquinaupscale
+ln -sfn ../public .dev-root/esquinaeraser
 ln -sfn ../public .dev-root/esquina2048
 ln -sfn ../public .dev-root/esquinablocks
 # Vite (import dinámico) pide /build/... en la raíz del host
@@ -37,6 +38,7 @@ echo "  http://127.0.0.1:${PORT}/esquinapdf/"
 echo "  http://127.0.0.1:${PORT}/esquinaimg/"
 echo "  http://127.0.0.1:${PORT}/esquinabg/"
 echo "  http://127.0.0.1:${PORT}/esquinaupscale/"
+echo "  http://127.0.0.1:${PORT}/esquinaeraser/"
 echo "  http://127.0.0.1:${PORT}/esquina2048/"
 echo "  http://127.0.0.1:${PORT}/esquinablocks/"
 echo "  http://localhost:${PORT}/          (índice)"

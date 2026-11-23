@@ -19,6 +19,7 @@
 /public/storage
 /public/models/esquinabg/*.onnx
 /public/models/esquinaupscale/*.onnx
+/public/models/esquinaeraser/*.onnx
 /storage/*.key
 /storage/pail
 /vendor
