@@ -1,90 +1,11 @@
 @php
     /**
      * Menú de herramientas EsquinaWeb.
-     * @var string $current  block|cut|qr|img|pdf|bg|upscale|eraser
+     * La lista vive en config/esquina_tools.php (la misma que el footer).
+     * @var string $current  id del catálogo
      */
     $current = $current ?? 'block';
-
-    $inlineToolIcon = static function (string $file, string $class): string {
-        $path = public_path('images/tools/'.$file);
-        if (! is_file($path)) {
-            return '';
-        }
-        $svg = file_get_contents($path);
-        $svg = preg_replace('/<\?xml[^>]*\?>/', '', $svg) ?? $svg;
-        $svg = preg_replace('/<!--.*?-->/s', '', $svg) ?? $svg;
-        $svg = preg_replace(
-            '/<svg\b([^>]*)>/',
-            '<svg$1 class="'.$class.'" aria-hidden="true" focusable="false">',
-            $svg,
-            1
-        ) ?? $svg;
-
-        return $svg;
-    };
-
-    // URLs relativas al host actual → en local navegan entre /esquina*/ y en prod a esquinaweb.com
-    $origin = rtrim(request()->getSchemeAndHttpHost(), '/');
-
-    $tools = [
-        [
-            'id' => 'block',
-            'name' => 'Esquina Block',
-            'hint' => 'Póster en hojas',
-            'url' => $origin.'/esquinablock/',
-            'file' => 'esquinablock.svg',
-        ],
-        [
-            'id' => 'cut',
-            'name' => 'Esquina Cut',
-            'hint' => 'Plantillas de corte',
-            'url' => $origin.'/esquinacut/',
-            'file' => 'esquinacut.svg',
-        ],
-        [
-            'id' => 'qr',
-            'name' => 'Esquina QR',
-            'hint' => 'Códigos QR',
-            'url' => $origin.'/esquinaqr/',
-            'file' => 'esquinaqr.svg',
-        ],
-        [
-            'id' => 'img',
-            'name' => 'Esquina Img',
-            'hint' => 'Comprimir imágenes',
-            'url' => $origin.'/esquinaimg/',
-            'file' => 'esquinaimg.svg',
-        ],
-        [
-            'id' => 'pdf',
-            'name' => 'Esquina PDF',
-            'hint' => 'Editar PDFs',
-            'url' => $origin.'/esquinapdf/',
-            'file' => 'esquinapdf.svg',
-        ],
-        [
-            'id' => 'bg',
-            'name' => 'Esquina BG',
-            'hint' => 'Quitar fondo',
-            'url' => $origin.'/esquinabg/',
-            'file' => 'esquinabg.svg',
-        ],
-        [
-            'id' => 'upscale',
-            'name' => 'Esquina Upscale',
-            'hint' => 'Ampliar imágenes',
-            'url' => $origin.'/esquinaupscale/',
-            'file' => 'esquinaupscale.svg',
-        ],
-        [
-            'id' => 'eraser',
-            'name' => 'Esquina Eraser',
-            'hint' => 'Quitar objetos',
-            'url' => $origin.'/esquinaeraser/',
-            'file' => 'esquinaeraser.svg',
-        ],
-    ];
-
+    $tools = \App\Support\EsquinaTools::listed();
     $active = collect($tools)->firstWhere('id', $current) ?? $tools[0];
 @endphp
 
@@ -98,7 +19,7 @@
         id="tools-menu-trigger"
     >
         <span class="tools-menu__icon inline-grid h-8 w-8 shrink-0">
-            {!! $inlineToolIcon($active['file'], 'h-full w-full block') !!}
+            {!! \App\Support\EsquinaTools::inlineIcon($active['file'], 'h-full w-full block') !!}
         </span>
         <span>{{ $active['name'] }}</span>
         <svg class="tools-menu__chevron h-4 w-4 text-slate-400 transition-transform duration-200" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -126,7 +47,7 @@
                         @endif
                     >
                         <span class="tools-menu__icon inline-grid h-10 w-10 shrink-0 transition-transform duration-150">
-                            {!! $inlineToolIcon($tool['file'], 'h-full w-full block') !!}
+                            {!! \App\Support\EsquinaTools::inlineIcon($tool['file'], 'h-full w-full block') !!}
                         </span>
                         <span class="min-w-0">
                             <span class="block text-sm font-semibold text-slate-900">{{ $tool['name'] }}</span>

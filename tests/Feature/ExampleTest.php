@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Http\Request;
 use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
@@ -19,7 +20,7 @@ class ExampleTest extends TestCase
     {
         // Simula el Alias Apache /esquinacut → public/ (pathInfo = "/", basePath = "/esquinacut").
         // MakesHttpRequests::call no aplica bien el base path de un subdirectorio; manejamos el Request a mano.
-        $request = \Illuminate\Http\Request::create('http://localhost/esquinacut/', 'GET', server: [
+        $request = Request::create('http://localhost/esquinacut/', 'GET', server: [
             'SCRIPT_NAME' => '/esquinacut/index.php',
             'SCRIPT_FILENAME' => public_path('index.php'),
         ]);
@@ -42,7 +43,7 @@ class ExampleTest extends TestCase
 
     public function test_esquina_qr_carga_correctamente(): void
     {
-        $request = \Illuminate\Http\Request::create('http://localhost/esquinaqr/', 'GET', server: [
+        $request = Request::create('http://localhost/esquinaqr/', 'GET', server: [
             'SCRIPT_NAME' => '/esquinaqr/index.php',
             'SCRIPT_FILENAME' => public_path('index.php'),
         ]);
@@ -66,7 +67,7 @@ class ExampleTest extends TestCase
 
     public function test_esquina_pdf_carga_correctamente(): void
     {
-        $request = \Illuminate\Http\Request::create('http://localhost/esquinapdf/', 'GET', server: [
+        $request = Request::create('http://localhost/esquinapdf/', 'GET', server: [
             'SCRIPT_NAME' => '/esquinapdf/index.php',
             'SCRIPT_FILENAME' => public_path('index.php'),
         ]);
@@ -90,7 +91,7 @@ class ExampleTest extends TestCase
 
     public function test_esquina_img_carga_correctamente(): void
     {
-        $request = \Illuminate\Http\Request::create('http://localhost/esquinaimg/', 'GET', server: [
+        $request = Request::create('http://localhost/esquinaimg/', 'GET', server: [
             'SCRIPT_NAME' => '/esquinaimg/index.php',
             'SCRIPT_FILENAME' => public_path('index.php'),
         ]);
@@ -111,14 +112,16 @@ class ExampleTest extends TestCase
         $this->assertStringContainsString('WebPage', $content);
         $this->assertStringContainsString('twitter:title', $content);
         $this->assertStringContainsString('aria-label="Volver arriba"', $content);
-        $this->assertStringContainsString('También prueba', $content);
+        $this->assertStringContainsString('data-tools-footer', $content);
+        $this->assertStringContainsString('Esquina Eraser', $content);
+        $this->assertStringContainsString('aria-current="page"', $content);
         $this->assertStringContainsString('Esquina PDF', $content);
         $this->assertStringContainsString('esquinapdf', $content);
     }
 
     public function test_esquina_bg_carga_correctamente(): void
     {
-        $request = \Illuminate\Http\Request::create('http://localhost/esquinabg/', 'GET', server: [
+        $request = Request::create('http://localhost/esquinabg/', 'GET', server: [
             'SCRIPT_NAME' => '/esquinabg/index.php',
             'SCRIPT_FILENAME' => public_path('index.php'),
         ]);
@@ -140,7 +143,7 @@ class ExampleTest extends TestCase
 
     public function test_esquina_upscale_carga_correctamente(): void
     {
-        $request = \Illuminate\Http\Request::create('http://localhost/esquinaupscale/', 'GET', server: [
+        $request = Request::create('http://localhost/esquinaupscale/', 'GET', server: [
             'SCRIPT_NAME' => '/esquinaupscale/index.php',
             'SCRIPT_FILENAME' => public_path('index.php'),
         ]);
@@ -162,7 +165,7 @@ class ExampleTest extends TestCase
 
     public function test_esquina_eraser_carga_correctamente(): void
     {
-        $request = \Illuminate\Http\Request::create('http://localhost/esquinaeraser/', 'GET', server: [
+        $request = Request::create('http://localhost/esquinaeraser/', 'GET', server: [
             'SCRIPT_NAME' => '/esquinaeraser/index.php',
             'SCRIPT_FILENAME' => public_path('index.php'),
         ]);
@@ -184,7 +187,7 @@ class ExampleTest extends TestCase
 
     public function test_esquina_2048_carga_correctamente(): void
     {
-        $request = \Illuminate\Http\Request::create('http://localhost/esquina2048/', 'GET', server: [
+        $request = Request::create('http://localhost/esquina2048/', 'GET', server: [
             'SCRIPT_NAME' => '/esquina2048/index.php',
             'SCRIPT_FILENAME' => public_path('index.php'),
         ]);
@@ -201,7 +204,7 @@ class ExampleTest extends TestCase
 
     public function test_esquina_blocks_carga_correctamente(): void
     {
-        $request = \Illuminate\Http\Request::create('http://localhost/esquinablocks/', 'GET', server: [
+        $request = Request::create('http://localhost/esquinablocks/', 'GET', server: [
             'SCRIPT_NAME' => '/esquinablocks/index.php',
             'SCRIPT_FILENAME' => public_path('index.php'),
         ]);
@@ -273,7 +276,7 @@ class ExampleTest extends TestCase
             'esquinacut.adsense.slots.side_left' => '4444444444',
         ]);
 
-        $request = \Illuminate\Http\Request::create('http://localhost/esquinacut/', 'GET', server: [
+        $request = Request::create('http://localhost/esquinacut/', 'GET', server: [
             'SCRIPT_NAME' => '/esquinacut/index.php',
             'SCRIPT_FILENAME' => public_path('index.php'),
         ]);
@@ -299,7 +302,7 @@ class ExampleTest extends TestCase
             'esquinapdf.adsense.slots.side_left' => '7777777777',
         ]);
 
-        $request = \Illuminate\Http\Request::create('http://localhost/esquinapdf/', 'GET', server: [
+        $request = Request::create('http://localhost/esquinapdf/', 'GET', server: [
             'SCRIPT_NAME' => '/esquinapdf/index.php',
             'SCRIPT_FILENAME' => public_path('index.php'),
         ]);
@@ -326,7 +329,7 @@ class ExampleTest extends TestCase
             'esquinabg.adsense.slots.side_left' => '1010101010',
         ]);
 
-        $request = \Illuminate\Http\Request::create('http://localhost/esquinabg/', 'GET', server: [
+        $request = Request::create('http://localhost/esquinabg/', 'GET', server: [
             'SCRIPT_NAME' => '/esquinabg/index.php',
             'SCRIPT_FILENAME' => public_path('index.php'),
         ]);

@@ -4,7 +4,7 @@ description: >-
   Inserta (o actualiza) el bloque «Ver guía paso a paso» con iframe de YouTube
   en una herramienta Esquina (Blade SEO), igual que Esquina Block / Cut.
   Usar cuando el usuario diga añadir tutorial, guía en vídeo, YouTube guide
-  a Block/Cut/QR/PDF/Img/BG, o invoque este skill con tool + URL del vídeo.
+  a Block/Cut/QR/PDF/Img/BG/Upscale/Eraser, o invoque este skill con tool + URL del vídeo.
 disable-model-invocation: true
 ---
 
@@ -12,7 +12,7 @@ disable-model-invocation: true
 
 ## Entrada necesaria
 
-1. **Tool:** `block` | `cut` | `qr` | `pdf` | `img` | `bg`
+1. **Tool:** `block` | `cut` | `qr` | `pdf` | `img` | `bg` | `upscale` | `eraser`
 2. **URL del vídeo:** `https://youtu.be/ID` o `https://www.youtube.com/watch?v=ID`
 
 Si falta alguno, preguntar antes de editar.
@@ -27,6 +27,8 @@ Si falta alguno, preguntar antes de editar.
 | pdf | `resources/views/esquinapdf.blade.php` | Esquina PDF |
 | img | `resources/views/esquinaimg.blade.php` | Esquina Img |
 | bg | `resources/views/esquinabg.blade.php` | Esquina BG |
+| upscale | `resources/views/esquinaupscale.blade.php` | Esquina Upscale |
+| eraser | `resources/views/esquinaeraser.blade.php` | Esquina Eraser |
 
 ## Dónde insertar
 

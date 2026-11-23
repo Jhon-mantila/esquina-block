@@ -183,27 +183,13 @@
             </div>
         </main>
 
-        <footer class="border-t border-slate-200 bg-white py-8 text-center text-sm text-slate-500">
-            <p>
+        <x-tools-footer current="qr">
+            <x-slot:summary>
                 EsquinaQR es un generador gratuito de códigos QR de
                 <a href="https://esquinaweb.com" class="text-blue-700 hover:underline">esquinaweb.com</a>.
                 Tus datos nunca salen de tu dispositivo.
-            </p>
-            <p class="mt-2">
-                También prueba
-                <a href="{{ $seo['sibling_bg_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('qr','bg')">Esquina BG</a>,
-                <a href="{{ $seo['sibling_block_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('qr','block')">Esquina Block</a>,
-                <a href="{{ $seo['sibling_cut_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('qr','cut')">Esquina Cut</a>,
-                <a href="{{ $seo['sibling_img_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('qr','img')">Esquina Img</a>
-                y
-                <a href="{{ $seo['sibling_pdf_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('qr','pdf')">Esquina PDF</a>.
-            </p>
-            <p class="mt-2">
-                <a href="{{ $seo['privacy_url'] }}" class="hover:text-blue-700 hover:underline">Política de privacidad</a>
-                <span aria-hidden="true">·</span>
-                <a href="{{ $seo['cookies_url'] }}" class="hover:text-blue-700 hover:underline">Política de cookies</a>
-            </p>
-        </footer>
+            </x-slot:summary>
+        </x-tools-footer>
 
         @include('partials.back-to-top')
         @include('partials.side-ads')

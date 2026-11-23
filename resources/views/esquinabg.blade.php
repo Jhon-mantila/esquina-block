@@ -168,26 +168,13 @@
             </div>
         </main>
 
-        <footer class="border-t border-slate-200 bg-white py-8 text-center text-sm text-slate-500">
-            <p>
+        <x-tools-footer current="bg">
+            <x-slot:summary>
                 Esquina BG es una herramienta gratuita de
                 <a href="https://esquinaweb.com" class="text-blue-700 hover:underline">esquinaweb.com</a>.
                 Tus imágenes nunca salen de tu dispositivo.
-            </p>
-            <p class="mt-2">
-                También prueba
-                <a href="{{ $seo['sibling_img_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('bg','img')">Esquina Img</a>,
-                <a href="{{ $seo['sibling_pdf_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('bg','pdf')">Esquina PDF</a>,
-                <a href="{{ $seo['sibling_cut_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('bg','cut')">Esquina Cut</a>
-                y
-                <a href="{{ $seo['sibling_block_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('bg','block')">Esquina Block</a>.
-            </p>
-            <p class="mt-2">
-                <a href="{{ $seo['privacy_url'] }}" class="hover:text-blue-700 hover:underline">Política de privacidad</a>
-                <span aria-hidden="true">·</span>
-                <a href="{{ $seo['cookies_url'] }}" class="hover:text-blue-700 hover:underline">Política de cookies</a>
-            </p>
-        </footer>
+            </x-slot:summary>
+        </x-tools-footer>
 
         @include('partials.back-to-top')
         @include('partials.side-ads')

@@ -205,38 +205,13 @@
             </div>
         </main>
 
-        <footer class="border-t border-slate-200 bg-white py-8 text-center text-sm text-slate-500">
-            <p>
+        <x-tools-footer current="cut">
+            <x-slot:summary>
                 Esquina Cut es un generador gratuito de plantillas imprimibles de
                 <a href="https://esquinaweb.com" class="text-blue-700 hover:underline">esquinaweb.com</a>.
                 Tus imágenes nunca salen de tu dispositivo.
-            </p>
-            <p class="mt-2">
-                ¿Quieres un póster gigante en varias hojas?
-                Prueba <a href="{{ $seo['sibling_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('cut','block')">{{ $seo['sibling_label'] }}</a>.
-            </p>
-            <p class="mt-2">
-                ¿Necesitas un código QR con logo y colores?
-                Prueba <a href="{{ $seo['sibling_qr_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('cut','qr')">{{ $seo['sibling_qr_label'] }}</a>.
-            </p>
-            <p class="mt-2">
-                ¿Quieres comprimir o convertir imágenes?
-                Prueba <a href="{{ $seo['sibling_img_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('cut','img')">{{ $seo['sibling_img_label'] }}</a>.
-            </p>
-            <p class="mt-2">
-                ¿Necesitas unir o editar PDFs?
-                Prueba <a href="{{ $seo['sibling_pdf_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('cut','pdf')">{{ $seo['sibling_pdf_label'] }}</a>.
-            </p>
-            <p class="mt-2">
-                ¿Quieres quitar el fondo de una foto?
-                Prueba <a href="{{ $seo['sibling_bg_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('cut','bg')">{{ $seo['sibling_bg_label'] }}</a>.
-            </p>
-            <p class="mt-2">
-                <a href="{{ $seo['privacy_url'] }}" class="hover:text-blue-700 hover:underline">Política de privacidad</a>
-                <span aria-hidden="true">·</span>
-                <a href="{{ $seo['cookies_url'] }}" class="hover:text-blue-700 hover:underline">Política de cookies</a>
-            </p>
-        </footer>
+            </x-slot:summary>
+        </x-tools-footer>
 
         @include('partials.back-to-top')
         @include('partials.side-ads')

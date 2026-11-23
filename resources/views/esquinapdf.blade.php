@@ -154,27 +154,13 @@
             </div>
         </main>
 
-        <footer class="border-t border-slate-200 bg-white py-8 text-center text-sm text-slate-500">
-            <p>
+        <x-tools-footer current="pdf">
+            <x-slot:summary>
                 Esquina PDF es una herramienta gratuita de
                 <a href="https://esquinaweb.com" class="text-blue-700 hover:underline">esquinaweb.com</a>.
                 Tus archivos nunca salen de tu dispositivo.
-            </p>
-            <p class="mt-2">
-                También prueba
-                <a href="{{ $seo['sibling_bg_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('pdf','bg')">Esquina BG</a>,
-                <a href="{{ $seo['sibling_img_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('pdf','img')">Esquina Img</a>,
-                <a href="{{ $seo['sibling_block_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('pdf','block')">Esquina Block</a>,
-                <a href="{{ $seo['sibling_cut_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('pdf','cut')">Esquina Cut</a>
-                y
-                <a href="{{ $seo['sibling_qr_url'] }}" class="text-blue-700 hover:underline" onclick="window.esquinaTrackCrossToolClick?.('pdf','qr')">EsquinaQR</a>.
-            </p>
-            <p class="mt-2">
-                <a href="{{ $seo['privacy_url'] }}" class="hover:text-blue-700 hover:underline">Política de privacidad</a>
-                <span aria-hidden="true">·</span>
-                <a href="{{ $seo['cookies_url'] }}" class="hover:text-blue-700 hover:underline">Política de cookies</a>
-            </p>
-        </footer>
+            </x-slot:summary>
+        </x-tools-footer>
 
         @include('partials.back-to-top')
         @include('partials.side-ads')

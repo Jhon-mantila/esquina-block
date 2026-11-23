@@ -19,7 +19,7 @@ Documentación detallada por producto → carpeta [`readme/`](readme/).
 
 Producción: `https://esquinaweb.com/<ruta>/`
 
-Iconos SVG del menú de herramientas: [`public/images/tools/`](public/images/tools/) (`esquinablock.svg`, `esquinacut.svg`, `esquinaqr.svg`, `esquinaimg.svg`, `esquinapdf.svg`, `esquinabg.svg`, `esquinaupscale.svg`, `esquinaeraser.svg`). Los carga el partial [`resources/views/partials/tools-menu.blade.php`](resources/views/partials/tools-menu.blade.php).
+Iconos SVG del menú y del footer: [`public/images/tools/`](public/images/tools/) (`esquinablock.svg`, `esquinacut.svg`, `esquinaqr.svg`, `esquinaimg.svg`, `esquinapdf.svg`, `esquinabg.svg`, `esquinaupscale.svg`, `esquinaeraser.svg`). La lista común está en [`config/esquina_tools.php`](config/esquina_tools.php); la usan [`resources/views/partials/tools-menu.blade.php`](resources/views/partials/tools-menu.blade.php) y [`resources/views/components/tools-footer.blade.php`](resources/views/components/tools-footer.blade.php).
 
 ## Juegos (EsquinaGamers)
 
