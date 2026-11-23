@@ -13,7 +13,10 @@
 
         const update = () => {
             ticking = false;
-            hiddenClasses.forEach((c) => button.classList.toggle(c, scrollY < innerHeight));
+            // Medio viewport, con tope. Una pantalla entera dejaba el botón
+            // oculto en PDF, BG, Upscale y Eraser: se puede bajar, pero no tanto.
+            const threshold = Math.min(480, innerHeight * 0.5);
+            hiddenClasses.forEach((c) => button.classList.toggle(c, scrollY < threshold));
 
             // El anuncio anclado de AdSense se fija abajo y taparía el botón.
             const anchor = document.querySelector('ins.adsbygoogle[data-anchor-status="displayed"]');
